@@ -17,7 +17,8 @@ Auteurs : BAS Eliot et ARNAUD-GODDET Etienne
 * Comment avez-vous choisi de programmer l'analyse de texte (dont la lecture
 des opérandes entières) ? Comment identifiez-vous les noms de registres, des noms "jolis", des entiers ?
 
-[COMPLÉTER ICI]
+Pour l'analyse de texte, nous avons décidé d'utiliser la commande getline() qui nous retourne la figne entière. Nous avons ensuite remplacé les virgules et parenthèses par des espaces pour nettoyer l'instruction. Nous avons ensuite extrait l'instruction en la sauvgardant dans une variable. Ceci rendra plus simple la recherche de l'instruction parmis toutes celles implémentées.
+
 
 * Avez-vous vu des motifs récurrents émerger ? Avez-vous "factorisé" ces motifs
 pour éviter de les répéter ? Si non, serait-ce difficile ?
