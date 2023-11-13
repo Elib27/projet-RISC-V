@@ -1,0 +1,6 @@
+/tests/*.hex
+/tests/*.o
+/tests/*.bin
+riscv-assembler
+riscv-emulator
+/__pycache__
