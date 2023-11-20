@@ -38,10 +38,85 @@ int main(int argc, char **argv)
         printf("%s", instruction);
     }
 
+
+    /* Recherche de l'instruction */
+    switch (instruction) {
+        case "add":
+            add(op1, op2, op3);
+        break;
+
+
+
     free(line);
 
     fclose(inputFile);
     fclose(outputFile);
 
     return 0;
+}
+
+
+void operationR(char *instruction, int op1, int op2, int op3) {
+
+    char inst[33];
+    inst[0] = '\0';
+    /* funct7 */
+    char funct7[8];
+    for(int i = 0; i<7; i++) {
+        funct7[i] = '0';
+    }
+    funct7[7] = '\0';
+    if( !strcmp(instruction, "sub")) {
+        funct7[5] = '1';
+    }
+    strcat(inst, funct7);
+    /* rs2 */
+    char rs2[6];
+    rs2[5] = '\0';
+    convertionDecimalBinaire(rs2, op3);
+    
+    strcat(inst, rs2);
+    /* rs1 */
+    char rs1[6];
+    rs1[5] = '\0';
+    convertionDecimalBinaire(rs1, op2);
+    strcat(inst, rs1);
+    /* funct3 */
+    char funct3[4];
+    for (int i = 0; i<3; i++) {
+        funct3[i] = '0';
+    }
+    funct3[3] = '\0';
+    strcat(inst, funct3);
+    /* rd */
+    char rd[6];
+    rd[5] = '\0';
+    convertionDecimalBinaire(rd, op1);
+    strcat(inst, rd);
+    /* opcode */
+    char opcode[8];
+    
+
+    printf("%s\n", inst);
+    for (int  i = 0; i < 7; i++) {
+        opcode[i] = '0';
+    }
+    opcode[7] = '\0';
+    opcode[1] = '1';
+    opcode[2] = '1';
+    opcode[5] = '1';
+    opcode[6] = '1';
+    strcat(inst, opcode);
+    printf("%s\n", inst);
+
+}
+
+void convertionDecimalBinaire(char *sortie, int entree) {
+    for(int t = 0; t<5; t++) {
+        sortie[t] = '0';
+    }
+    for( int i = 4; entree>0; i--) {
+        sortie[i] = entree%2 + '0';
+        entree = entree/2;
+    }
 }
