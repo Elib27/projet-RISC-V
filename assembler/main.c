@@ -2,11 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 int getInstructionFromLine(char *line, char instruction[5], char arguments[3][5]);
 int getRegisterWithAlias(char *alias);
 int stringToInt(char *string);
-void convertionDecimalBinaire(char *sortie, int entree);
-void operationR(char *instruction, int op1, int op2, int op3);
+void convertionDecimalBinaire(char *sortie, int taille, int entree);
+char getIntructionType(char *instruction);
+void operationR(char inst[],char *instruction, int op1, int op2, int op3);
+void operationI(char inst[],char *instruction, int op1, int op2, int op3);
 
 int main(int argc, char **argv) {
     /* ./riscv-assembler <ASSEMBLER INPUT> <HEX OUTPUT> */
@@ -28,7 +31,32 @@ int main(int argc, char **argv) {
         char arguments[3][5];
         int args_count;
         args_count = getInstructionFromLine(line, instruction, arguments);
-        if (args_count > 0) printf("instruction: %s, args_count: %d\n", instruction, args_count);
+        if (args_count > 0) {
+            printf("instruction: %s, args_count: %d\n", instruction, args_count);
+
+            char inst[33];
+            inst[0] = '\0';
+            
+            switch (getIntructionType(instruction)) {
+                case 'R':
+                    printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                    operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
+                    break;
+                
+                case 'I':
+                    printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                    operationI(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                    break;
+                
+                default:
+                    printf("Instruction non reconnue \n");
+                    break;
+            }
+            fprintf(outputFile, inst);
+            fprintf(outputFile, "\n");
+            
+        }
+
 
         /* Recherche de l'instruction */
         // switch (instruction)
@@ -45,6 +73,7 @@ int main(int argc, char **argv) {
 
     return 0;
 }
+
 
 int getInstructionFromLine(char *line, char instruction[5], char arguments[3][5]) {
     if (line[0] == '#' || line[0] == '\n') return 0; // ignore les lignes vides et les commentaires
@@ -101,10 +130,12 @@ int stringToInt(char *string) {
     return result;
 }
 
-void operationR(char *instruction, int op1, int op2, int op3) {
+/*
+    @brief transform R type instrucion un binary representation  
+*/
+void operationR(char inst[],char *instruction, int op1, int op2, int op3) {
 
-    char inst[33];
-    inst[0] = '\0';
+
     /* funct7 */
     char funct7[8];
     for (int i = 0; i < 7; i++) {
@@ -118,13 +149,13 @@ void operationR(char *instruction, int op1, int op2, int op3) {
     /* rs2 */
     char rs2[6];
     rs2[5] = '\0';
-    convertionDecimalBinaire(rs2, op3);
+    convertionDecimalBinaire(rs2, 5, op3);
 
     strcat(inst, rs2);
     /* rs1 */
     char rs1[6];
     rs1[5] = '\0';
-    convertionDecimalBinaire(rs1, op2);
+    convertionDecimalBinaire(rs1, 5, op2);
     strcat(inst, rs1);
     /* funct3 */
     char funct3[4];
@@ -136,12 +167,11 @@ void operationR(char *instruction, int op1, int op2, int op3) {
     /* rd */
     char rd[6];
     rd[5] = '\0';
-    convertionDecimalBinaire(rd, op1);
+    convertionDecimalBinaire(rd, 5, op1);
     strcat(inst, rd);
     /* opcode */
     char opcode[8];
 
-    printf("%s\n", inst);
     for (int i = 0; i < 7; i++) {
         opcode[i] = '0';
     }
@@ -154,12 +184,136 @@ void operationR(char *instruction, int op1, int op2, int op3) {
     printf("%s\n", inst);
 }
 
-void convertionDecimalBinaire(char *sortie, int entree) {
-    for (int t = 0; t < 5; t++) {
+
+/*
+    @brief transform I type instrucion un binary representation  
+*/
+void operationI(char inst[], char *instruction, int op1, int op2, int op3) {
+    char imm[13];
+    imm[12] = '\0';
+    for (int i = 0; i<12; i++) {
+        imm[i] = '0';
+    }
+    convertionDecimalBinaire(imm, 12, op3);
+    char rs1[6];
+    rs1[5] = '\0';
+    for(int i = 0; i<5; i++) {
+        rs1[i] = '0';
+    }
+    convertionDecimalBinaire(rs1, 5, op2);
+    char funct3[4];
+    funct3[3] = '\0';
+    for (int i = 0; i<3; i++) {
+        funct3[i] = '0';
+    }
+    char rd[6];
+    rd[5] = '\0';
+    for (int i = 0; i<5; i++) {
+        rd[i] = '0';
+    }
+    convertionDecimalBinaire(rd, 5, op1);
+    char opcode[8];
+    opcode[7] = '\0';
+    for (int i = 0; i < 7; i++) {
+        opcode[i] = '0';
+    }
+    
+    /* choix selon l'instruction */
+
+    if (!strcmp("addi", instruction)) {
+
+        opcode[2] = '1';
+        opcode[5] = '1';
+        opcode[6] = '1';
+    } else if (!strcmp("ld", instruction)) {
+
+        funct3[1] = '1';
+        funct3[2] = '1';
+        opcode[5] = '1';
+        opcode[6] = '1';
+    }
+    
+
+    strcat(inst, imm);
+    strcat(inst, rs1);
+    strcat(inst, funct3);
+    strcat(inst, rd);
+    strcat(inst, opcode);
+    printf("%s\n", inst);
+
+}
+
+
+/* @brief Convertion d'un entier decimal en "représentation" binaire (char '0' et '1')
+ * @param sortie tableau de sortie
+ * @param taille taille de la sortie
+ * @param entree nombre en decimal a convertir*/
+void convertionDecimalBinaire(char *sortie, int taille, int entree) {
+
+    // deprecated 
+    // a faire en dehors de cete fonction
+    for (int t = 0; t < taille-1; t++) {
         sortie[t] = '0';
     }
-    for (int i = 4; entree > 0; i--) {
+
+
+    for (int i = taille-1; entree > 0; i--) {
         sortie[i] = entree % 2 + '0';
         entree = entree / 2;
     }
+}
+
+
+
+char getIntructionType(char *instruction) {
+
+    /* tableaux des instructions par types*/
+
+    // R type
+    #define nbrtype 2
+    char rtype[nbrtype][5] = {"add", "sub"};
+
+    // I type
+    #define nbitype 2
+    char itype[nbitype][5] = {"addi", "ld"};
+
+    // S type
+    #define nbstype 1
+    char stype[nbstype][5] = {"sd"};
+
+    // B type
+    #define nbbtype 4
+    char btype[nbbtype][5] = {"beq", "bne", "blt", "bge"};
+
+    // j type
+    #define nbjtype 1
+    char jtype[nbjtype][5] = {"jal"};
+
+    /* recherche dans les tableaux */
+    for (int i = 0; i<nbrtype; i++ ) {
+        if (!strcmp(instruction, rtype[i])) {
+            return 'R';
+        }
+    }
+    for (int i = 0; i<nbitype; i++ ) {
+        if (!strcmp(instruction, itype[i])) {
+            return 'I';
+        }
+    }
+    for (int i = 0; i<nbstype; i++ ) {
+        if (!strcmp(instruction, stype[i])) {
+            return 'S';
+        }
+    }
+    for (int i = 0; i<nbbtype; i++ ) {
+        if (!strcmp(instruction, btype[i])) {
+            return 'B';
+        }
+    }
+    for (int i = 0; i<nbjtype; i++ ) {
+        if (!strcmp(instruction, jtype[i])) {
+            return 'J';
+        }
+    }
+    return 'X';
 }
