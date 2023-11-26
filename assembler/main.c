@@ -10,6 +10,7 @@ void convertionDecimalBinaire(char *sortie, int taille, int entree);
 char getIntructionType(char *instruction);
 void operationR(char inst[],char *instruction, int op1, int op2, int op3);
 void operationI(char inst[],char *instruction, int op1, int op2, int op3);
+void convertBinIntructionToHexIntruction(char hexInstruction[], char binInstruction[]);
 
 int main(int argc, char **argv) {
     /* ./riscv-assembler <ASSEMBLER INPUT> <HEX OUTPUT> */
@@ -52,7 +53,10 @@ int main(int argc, char **argv) {
                     printf("Instruction non reconnue \n");
                     break;
             }
-            fprintf(outputFile, inst);
+            char hexinst[9];
+            hexinst[8] = '\0';
+            convertBinIntructionToHexIntruction(hexinst, inst);
+            fprintf(outputFile, hexinst);
             fprintf(outputFile, "\n");
             
         }
@@ -316,4 +320,34 @@ char getIntructionType(char *instruction) {
         }
     }
     return 'X';
+}
+
+/*
+    @brief converti une instruction en representation binaire en une instruction en representation hexa. Les longueurs sont fixes, 32 pour binaire et 8 pour hexa
+    @param hexInstruction chaine de sortie
+    @param binInstruction chaine d'entree
+    */
+void convertBinIntructionToHexIntruction(char hexInstruction[], char binInstruction[]) {
+
+    int outputIndex = 0;
+    int temp = 0;
+    for (int i = 0; i<32; i=i+4) {
+        if (binInstruction[i] == '1') {
+            temp +=8;
+        }
+        if (binInstruction[i+1] == '1') {
+            temp +=4;
+        }
+        if (binInstruction[i+2] == '1') {
+            temp +=2;
+        }
+        if (binInstruction[i+3] == '1') {
+            temp +=1;
+        }
+        char hexconvert[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
+        hexInstruction[outputIndex] = hexconvert[temp];
+        outputIndex++;
+        temp = 0;
+    }
+
 }
