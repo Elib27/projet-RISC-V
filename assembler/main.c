@@ -19,24 +19,34 @@ int main(int argc, char **argv) {
 
     size_t len;
     char *line = NULL;
+    int count = 0;
     while (getline(&line, &len, inputFile) != -1) {
         char instruction[5];
         char arguments[3][5];
         int args_count = getInstructionFromLine(line, instruction, arguments);
         if (args_count > 0) {
             printf("instruction: %s, args_count: %d\n", instruction, args_count);
-
             char inst[33];
             inst[0] = '\0';
-
+            printf("\n\n-------------- INSTRUCTION no %d --------------\n", count);
+            count++;
             switch (getIntructionType(instruction)) {
             case 'R':
-                printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                printf("INSTRUCTION R : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
                 operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
                 break;
+
             case 'I':
-                printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                printf("INSTRUCTION I : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
                 operationI(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                break;
+            case 'S':
+                printf("INSTRUCTION S : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                operationS(inst, instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]), getRegisterWithAlias(arguments[2]));
+                break;
+            case 'B':
+                printf("INSTRUCTION B : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                operationB(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
                 break;
             default:
                 printf("Instruction non reconnue \n");
