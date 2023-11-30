@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "instructions.h"
-
 #include "main.h"
 
 int main(int argc, char **argv) {
@@ -23,45 +22,32 @@ int main(int argc, char **argv) {
     while (getline(&line, &len, inputFile) != -1) {
         char instruction[5];
         char arguments[3][5];
-        int args_count;
-        args_count = getInstructionFromLine(line, instruction, arguments);
+        int args_count = getInstructionFromLine(line, instruction, arguments);
         if (args_count > 0) {
             printf("instruction: %s, args_count: %d\n", instruction, args_count);
 
             char inst[33];
             inst[0] = '\0';
-            
+
             switch (getIntructionType(instruction)) {
-                case 'R':
-                    printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                    operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
-                    break;
-                
-                case 'I':
-                    printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                    operationI(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
-                    break;
-                
-                default:
-                    printf("Instruction non reconnue \n");
-                    break;
+            case 'R':
+                printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
+                break;
+            case 'I':
+                printf("INSTRUCTION : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
+                operationI(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                break;
+            default:
+                printf("Instruction non reconnue \n");
+                break;
             }
             char hexinst[9];
             hexinst[8] = '\0';
             convertBinIntructionToHexIntruction(hexinst, inst);
             fprintf(outputFile, hexinst);
             fprintf(outputFile, "\n");
-            
         }
-
-
-        /* Recherche de l'instruction */
-        // switch (instruction)
-        // {
-        // case "add":
-        //     add(op1, op2, op3);
-        //     break;
-        // }
     }
 
     free(line);
@@ -128,60 +114,49 @@ int stringToInt(char *string) {
 }
 
 
+#define R_TYPE_LENGTH 2
+#define I_TYPE_LENGTH 2
+#define S_TYPE_LENGTH 1
+#define B_TYPE_LENGTH 4
+#define J_TYPE_LENGTH 1
 
-
-
-
-
-
+/*
+    @brief renvoie le type de l'instruction ou 'X' si non reconnue
+*/
 
 char getIntructionType(char *instruction) {
 
     /* tableaux des instructions par types*/
 
-    // R type
-    #define nbrtype 2
-    char rtype[nbrtype][5] = {"add", "sub"};
-
-    // I type
-    #define nbitype 2
-    char itype[nbitype][5] = {"addi", "ld"};
-
-    // S type
-    #define nbstype 1
-    char stype[nbstype][5] = {"sd"};
-
-    // B type
-    #define nbbtype 4
-    char btype[nbbtype][5] = {"beq", "bne", "blt", "bge"};
-
-    // j type
-    #define nbjtype 1
-    char jtype[nbjtype][5] = {"jal"};
+    char Rtype[R_TYPE_LENGTH][5] = { "add", "sub" };
+    char Itype[I_TYPE_LENGTH][5] = { "addi", "ld" };
+    char Stype[S_TYPE_LENGTH][5] = { "sd" };
+    char Btype[B_TYPE_LENGTH][5] = { "beq", "bne", "blt", "bge" };
+    char Jtype[J_TYPE_LENGTH][5] = { "jal" };
 
     /* recherche dans les tableaux */
-    for (int i = 0; i<nbrtype; i++ ) {
-        if (!strcmp(instruction, rtype[i])) {
+    for (int i = 0; i < R_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, Rtype[i])) {
             return 'R';
         }
     }
-    for (int i = 0; i<nbitype; i++ ) {
-        if (!strcmp(instruction, itype[i])) {
+    for (int i = 0; i < I_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, Itype[i])) {
             return 'I';
         }
     }
-    for (int i = 0; i<nbstype; i++ ) {
-        if (!strcmp(instruction, stype[i])) {
+    for (int i = 0; i < S_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, Stype[i])) {
             return 'S';
         }
     }
-    for (int i = 0; i<nbbtype; i++ ) {
-        if (!strcmp(instruction, btype[i])) {
+    for (int i = 0; i < B_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, Btype[i])) {
             return 'B';
         }
     }
-    for (int i = 0; i<nbjtype; i++ ) {
-        if (!strcmp(instruction, jtype[i])) {
+    for (int i = 0; i < J_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, Jtype[i])) {
             return 'J';
         }
     }
@@ -192,28 +167,25 @@ char getIntructionType(char *instruction) {
     @brief converti une instruction en representation binaire en une instruction en representation hexa. Les longueurs sont fixes, 32 pour binaire et 8 pour hexa
     @param hexInstruction chaine de sortie
     @param binInstruction chaine d'entree
-    */
+*/
 void convertBinIntructionToHexIntruction(char hexInstruction[], char binInstruction[]) {
-
     int outputIndex = 0;
-    int temp = 0;
-    for (int i = 0; i<32; i=i+4) {
+    for (int i = 0; i < 32; i += 4) {
+        int hexValue = 0;
         if (binInstruction[i] == '1') {
-            temp +=8;
+            hexValue += 8;
         }
-        if (binInstruction[i+1] == '1') {
-            temp +=4;
+        if (binInstruction[i + 1] == '1') {
+            hexValue += 4;
         }
-        if (binInstruction[i+2] == '1') {
-            temp +=2;
+        if (binInstruction[i + 2] == '1') {
+            hexValue += 2;
         }
-        if (binInstruction[i+3] == '1') {
-            temp +=1;
+        if (binInstruction[i + 3] == '1') {
+            hexValue += 1;
         }
-        char hexconvert[] = {'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'};
-        hexInstruction[outputIndex] = hexconvert[temp];
+        char hexRepresentation[] = { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+        hexInstruction[outputIndex] = hexRepresentation[hexValue];
         outputIndex++;
-        temp = 0;
     }
-
 }
