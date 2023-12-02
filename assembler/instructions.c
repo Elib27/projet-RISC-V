@@ -1,322 +1,274 @@
 #include <stdio.h>
 #include <string.h>
+#include<stdint.h>
+
 #include "main.h"
 
-/* @brief Convertion d'un entier decimal en "représentation" binaire (char '0' et '1')
- * @param sortie tableau de sortie
- * @param taille taille de la sortie
- * @param entree nombre en decimal a convertir
-*/
-void convertionDecimalBinaire(char *sortie, int taille, int entree) {
-
-    // deprecated 
-    // a faire en dehors de cete fonction
-    for (int t = 0; t < taille - 1; t++) {
-        sortie[t] = '0';
-    }
-
-    for (int i = taille - 1; entree > 0; i--) {
-        sortie[i] = entree % 2 + '0';
-        entree = entree / 2;
-    }
-}
 
 
 /*
     @brief transform R type instrucion un binary representation
 */
-void operationR(char inst[], char *instruction, int op1, int op2, int op3) {
+uint32_t operationR(char *instruction, int op1, int op2, int op3) {
 
-    /* funct7 */
-    char funct7[8] = "0000000";
+    // declaration des elements de l'instruction
+    uint32_t funct7 = 0;
+    uint32_t rs2 = 0;
+    rs2 = rs2 | op3;
+    uint32_t rs1 = 0;
+    rs1 = rs1 | op2;
+    uint32_t funct3 = 0;
+    uint32_t rd = 0;
+    rd = rd | op1;
+    uint32_t opcode = 0b0110011;
+
     if (!strcmp(instruction, "sub")) {
-        funct7[5] = '1';
+        funct7 = funct7 | 0x20;
     }
-    strcat(inst, funct7);
 
-    /* rs2 */
-    char rs2[6];
-    rs2[5] = '\0';
-    convertionDecimalBinaire(rs2, 5, op3);
-    strcat(inst, rs2);
+    // concatenation
 
-    /* rs1 */
-    char rs1[6];
-    rs1[5] = '\0';
-    convertionDecimalBinaire(rs1, 5, op2);
-    strcat(inst, rs1);
-
-    /* funct3 */
-    char funct3[4] = "000";
-    strcat(inst, funct3);
-
-    /* rd */
-    char rd[6];
-    rd[5] = '\0';
-    convertionDecimalBinaire(rd, 5, op1);
-    strcat(inst, rd);
-
-    /* opcode */
-    char opcode[8] = "0110011";
-    strcat(inst, opcode);
-
-    printf("%s\n", inst);
+    uint32_t inst = 0;
+    printf("inst : %08x \n", inst);
+    inst = inst | funct7;
+    printf("inst : %08x \n", funct7);
+    inst = inst << 5;
+    inst = inst | rs2;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    printf("inst : %08x \n", inst);
+    inst = inst | rs1;
+    printf("inst : %08x \n", inst);
+    inst = inst << 3;
+    inst = inst | funct3;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | rd;
+    printf("inst : %08x \n", inst);
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("inst : %08x \n", inst);
+    printf("instructio finale = 0b%d \n", inst);
+    return inst;
 }
 
 /*
     @brief transform I type instrucion un binary representation
 */
-void operationI(char inst[], char *instruction, int op1, int op2, int op3) {
+uint32_t operationI(char *instruction, int op1, int op2, int op3) {
 
-    char imm[13] = "000000000000";
-    convertionDecimalBinaire(imm, 12, op3);
+    // declaration des elements de l'instruction
+    uint32_t imm = 0;
 
-    char rs1[6] = "00000";
-    convertionDecimalBinaire(rs1, 5, op2);
+    uint32_t rs1 = 0;
 
-    char funct3[4] = "000";
+    uint32_t funct3 = 0;
 
-    char rd[6] = "00000";
-    convertionDecimalBinaire(rd, 5, op1);
+    uint32_t rd = 0;
+    rd = rd | op1;
 
-    char opcode[8] = "0000000";
-    /* choix selon l'instruction */
-    if (!strcmp("addi", instruction)) {
-        opcode[2] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
-    }
-    else if (!strcmp("ld", instruction)) {
-        funct3[1] = '1';
-        funct3[2] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
+    uint32_t opcode = 0;
+
+    if (!strcmp(instruction, "addi")) {
+        imm = imm | op3;
+        rs1 = rs1 | op2;
+        opcode = 0b0010011;
+    } else if (!strcmp(instruction, "ld")) {
+        imm = imm | op2;
+        rs1 = rs1 | op3;
+        funct3 = 0x3;
+        opcode = 0b0000011;
     }
 
-    if (!strcmp("ld", instruction)) {
-        strcat(inst, rs1);
-        strcat(inst, imm);
-    }
-    else {
-        strcat(inst, imm);
-        strcat(inst, rs1);
-    }
+    // concatenation
 
-    strcat(inst, funct3);
-    strcat(inst, rd);
-    strcat(inst, opcode);
+    uint32_t inst = 0;
+    printf("inst : %08x \n", inst);
+    inst = inst | imm;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | rs1;
+    printf("inst : %08x \n", inst);
+    inst = inst << 3;
+    printf("inst : %08x \n", inst);
+    inst = inst | funct3;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | rd;
+    printf("inst : %08x \n", inst);
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("instructio finale = 0b%d \n", inst);
+    return inst;
 }
+
+
 
 
 /*
     @brief transform S type instrucion un binary representation
 */
-void operationS(char inst[], char *instruction, int op1, int op2, int op3) {
-    char imm_full[13];
-    imm_full[12] = '\0';
-    for (int i = 0; i < 12; i++) {
-        imm_full[i] = '0';
-    }
-    convertionDecimalBinaire(imm_full, 12, op2); // valeur immediate dans l'argument 2
-    printf("imm-full : %s\n", imm_full);
-    char rs2[6];
-    rs2[5] = '\0';
-    for (int i = 0; i < 5; i++) {
-        rs2[i] = '0';
-    }
-    convertionDecimalBinaire(rs2, 5, op1); // rs2 dans l'argument 1
-    char rs1[6];
-    rs1[5] = '\0';
-    for (int i = 0; i < 5; i++) {
-        rs1[i] = '0';
-    }
-    convertionDecimalBinaire(rs1, 5, op3); // valeur rs1 dans l'argument 3
-    char funct3[4];
-    funct3[3] = '\0';
-    for (int i = 0; i < 3; i++) {
-        funct3[i] = '0';
-    }
+uint32_t operationS(char *instruction, int op1, int op2, int op3) {
 
-    char opcode[8];
-    opcode[7] = '\0';
-    for (int i = 0; i < 7; i++) {
-        opcode[i] = '0';
-    }
+    // declaration des elements de l'instruction
+    uint32_t imm = 0;
+    imm = imm | op2;
 
-    /* choix selon l'instruction */
+    uint32_t rs2 = 0;
+    rs2 = rs2 | op1;
 
-    if (!strcmp("sd", instruction)) {
+    uint32_t rs1 = 0;
+    rs1 = rs1 | op3;
 
-        funct3[1] = '1';
-        funct3[2] = '1';
+    uint32_t funct3 = 0x3;
 
-        opcode[1] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
-    }
 
-    // pour ce type d'instruction, il faut couper en deux la valeur immédiate
+    uint32_t opcode = 0b0100011;
 
-    char imm1[8];
-    imm1[7] = '\0';
-    for (int i = 0; i < 7; i++) {
-        imm1[i] = imm_full[i];
-    }
-    char imm2[6];
-    imm2[5] = '\0';
-    for (int i = 7; i < 12; i++) {
-        imm2[i - 7] = imm_full[i];
-    }
-    printf("imm2 : %s\n", imm2);
-    printf("imm_full[11] : %c\n", imm_full[11]);
 
-    strcat(inst, imm1);
-    strcat(inst, rs2);
-    strcat(inst, rs1);
-    strcat(inst, funct3);
-    strcat(inst, imm2);
-    strcat(inst, opcode);
-    printf("%s\n", inst);
+    // decoupage de la valeur immediate
 
+    uint32_t imm1 = imm >> 5;
+    uint32_t imm2 = imm & 0b11111;
+
+    // concatenation
+
+    uint32_t inst = 0;
+    printf("inst : %08x \n", inst);
+    inst = inst | imm1;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | rs2;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    printf("inst : %08x \n", inst);
+    inst = inst | rs1;
+    printf("inst : %08x \n", inst);
+    inst = inst << 3;
+    inst = inst | funct3;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | imm2;
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("instructio finale = 0b%d \n", inst);
+    return inst;
 }
-
 
 
 /*
     @brief transform B type instrucion un binary representation
 */
-void operationB(char inst[], char *instruction, int op1, int op2, int op3) {
-    char imm_full[14];
-    imm_full[13] = '\0';
-    for (int i = 0; i < 13; i++) {
-        imm_full[i] = '0';
-    }
-    convertionDecimalBinaire(imm_full, 13, op3); // valeur immediate dans l'argument 2
-    printf("imm-full : %s\n", imm_full);
-    char rs2[6];
-    rs2[5] = '\0';
-    for (int i = 0; i < 5; i++) {
-        rs2[i] = '0';
-    }
-    convertionDecimalBinaire(rs2, 5, op2); // rs2 dans l'argument 1
-    char rs1[6];
-    rs1[5] = '\0';
-    for (int i = 0; i < 5; i++) {
-        rs1[i] = '0';
-    }
-    convertionDecimalBinaire(rs1, 5, op1); // valeur rs1 dans l'argument 3
-    char funct3[4];
-    funct3[3] = '\0';
-    for (int i = 0; i < 3; i++) {
-        funct3[i] = '0';
-    }
+uint32_t operationB(char *instruction, int op1, int op2, int op3) {
 
-    char opcode[8];
-    opcode[7] = '\0';
-    for (int i = 0; i < 7; i++) {
-        opcode[i] = '0';
-    }
+    // declaration des elements de l'instruction
+    uint32_t imm = 0;
+    imm = imm | op3;
 
-    /* choix selon l'instruction */
+    uint32_t rs2 = 0;
+    rs2 = rs2 | op2;
+
+    uint32_t rs1 = 0;
+    rs1 = rs1 | op1;
+
+    uint32_t funct3 = 0x3;
+
+    uint32_t opcode = 0b1100011;
+
+    // en fonction de l'instruction
 
     if (!strcmp("beq", instruction)) {
-        opcode[0] = '1';
-        opcode[1] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
+        funct3 = 0x0;
     }
     else if (!strcmp("bne", instruction)) {
-        opcode[0] = '1';
-        opcode[1] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
-        funct3[2] = '1';
+        funct3 = 0x1;
     }
     else if (!strcmp("blt", instruction)) {
-        opcode[0] = '1';
-        opcode[1] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
-        funct3[0] = '1';
+        funct3 = 0x4;
     }
     else if (!strcmp("bge", instruction)) {  // else if si ajout d'autres instructions
-        opcode[0] = '1';
-        opcode[1] = '1';
-        opcode[5] = '1';
-        opcode[6] = '1';
-        funct3[0] = '1';
-        funct3[2] = '1';
+        funct3 = 0x5;
     }
 
-    // pour ce type d'instruction, il faut couper en deux la valeur immédiate
-
-    char imm1[8];
-    imm1[7] = '\0';
-    for (int i = 0; i < 7; i++) {
-        imm1[i] = imm_full[i + 1];
-    }
-    char imm2[6];
-    imm2[5] = '\0';
-    for (int i = 7; i < 12; i++) {
-        imm2[i - 7] = imm_full[i + 1];
-    }
-    printf("imm1 : %s\n", imm1);
-    printf("imm2 : %s\n", imm2);
-    printf("imm_full[11] : %c\n", imm_full[11]);
-
-    strcat(inst, imm1);
-    strcat(inst, rs2);
-    strcat(inst, rs1);
-    strcat(inst, funct3);
-    strcat(inst, imm2);
-    strcat(inst, opcode);
-
-    // modifiaction de l'instruction B
-    char temp = inst[0];
-    inst[0] = imm_full[0];
-    inst[24] = temp;
 
 
+    // decoupage de la valeur immediate
 
-    printf("%s\n", inst);
+    uint32_t imm1 = ((imm >> 5) & 0b111111) | ((imm >> 6) & 0b1000000);
+    uint32_t imm2 = (imm & 0b11110) | ((imm >> 11) & 0b1);
 
+    // concatenation
+
+    uint32_t inst = 0;
+    printf("inst : %08x \n", inst);
+    inst = inst | imm1;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | rs2;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    printf("inst : %08x \n", inst);
+    inst = inst | rs1;
+    printf("inst : %08x \n", inst);
+    inst = inst << 3;
+    inst = inst | funct3;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | imm2;
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("instructio finale = 0b%d \n", inst);
+    return inst;
 }
-
 
 
 
 /*
-    @brief transform B type instrucion un binary representation
-*//*
-void operationB(char inst[], char *instruction, int op1, int op2, int op3) {
+    @brief transform J type instrucion un binary representation
+*/
+uint32_t operationJ(char *instruction, int op1, int op2) {
 
-    operationS(inst, instruction, op1, op2, op3);
+    // declaration des elements de l'instruction
+    uint32_t imm = 0;
+    imm = imm | op2;
 
-    // modifiaction de l'instruction B
-    char temp = inst[1];
-    for (int i = 1; i<6; i++) {
-        inst[i] = inst[i+1];
+    uint32_t rd = 0;
+    rd = rd | op1;
 
-    }
-    inst[6] = inst[20];
-    inst[20] = inst[21];
-    inst[21] = inst[22];
-    inst[22] = inst[23];
-    inst[23] = inst[24];
-    inst[24] = temp;
-
-    //choix selon l'instruction
-
-    if (!strcmp("beq", instruction)) {
+    uint32_t opcode = 0b1101111;
 
 
-        inst[25+0] = '1'; // offset 25 = debut de opcode
-        inst[25+1] = '1';
-        inst[25+5] = '1';
-        inst[25+6] = '1';
-    }
+    // mise en forme de la valeur immediate
+    
+    uint32_t imm1 = (imm >> 20) & 0b1;
+    uint32_t imm2 = (imm >> 1) & 0b11111111;
+    uint32_t imm3 = (imm >> 11) & 0b1;
+    uint32_t imm4 = (imm >> 12) & 0b11111111;
 
+    imm = 0;
+    
+    imm = imm | imm1;
+    imm = imm << 10;
+    imm = imm | imm2;
+    imm = imm << 1;
+    imm = imm | imm3;
+    imm = imm << 8;
+    imm = imm | imm4;
 
+    
+    // concatenation
+
+    uint32_t inst = 0;
+    printf("inst : %08x \n", inst);
+    inst = inst | imm;
+    printf("inst : %08x \n", inst);
+    inst = inst << 5;
+    inst = inst | rd;
+    printf("inst : %08x \n", inst);
+    inst = inst << 7;
+    printf("inst : %08x \n", inst);
+    inst = inst | opcode;
+    printf("instructio finale = 0b%d \n", inst);
+    return inst;
 }
 
-*/

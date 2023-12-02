@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
+
 #include "instructions.h"
 #include "main.h"
 
@@ -30,32 +32,38 @@ int main(int argc, char **argv) {
             inst[0] = '\0';
             printf("\n\n-------------- INSTRUCTION no %d --------------\n", count);
             count++;
+            uint32_t instru = 0;
             switch (getIntructionType(instruction)) {
             case 'R':
                 printf("INSTRUCTION R : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
+                //operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
+                instru = operationR(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
                 break;
 
             case 'I':
                 printf("INSTRUCTION I : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                operationI(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                instru = operationI(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
                 break;
             case 'S':
                 printf("INSTRUCTION S : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                operationS(inst, instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]), getRegisterWithAlias(arguments[2]));
+                instru = operationS(instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]), getRegisterWithAlias(arguments[2]));
                 break;
             case 'B':
                 printf("INSTRUCTION B : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                operationB(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                instru = operationB(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                break;
+            case 'J':
+                printf("INSTRUCTION J : %s | OP1 : %s | OP2 : %s\n", instruction, arguments[0], arguments[1]);
+                instru = operationJ(instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]));
                 break;
             default:
                 printf("Instruction non reconnue \n");
                 break;
             }
-            char hexinst[9];
-            hexinst[8] = '\0';
-            convertBinIntructionToHexIntruction(hexinst, inst);
-            fprintf(outputFile, hexinst);
+            //char hexinst[9];
+            //hexinst[8] = '\0';
+            //convertBinIntructionToHexIntruction(hexinst, inst);
+            fprintf(outputFile, "%08x", instru);
             fprintf(outputFile, "\n");
         }
     }
@@ -172,6 +180,8 @@ char getIntructionType(char *instruction) {
     }
     return 'X';
 }
+
+
 
 /*
     @brief converti une instruction en representation binaire en une instruction en representation hexa. Les longueurs sont fixes, 32 pour binaire et 8 pour hexa
