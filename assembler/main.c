@@ -28,8 +28,6 @@ int main(int argc, char **argv) {
         int args_count = getInstructionFromLine(line, instruction, arguments);
         if (args_count > 0) {
             printf("instruction: %s, args_count: %d\n", instruction, args_count);
-            char inst[33];
-            inst[0] = '\0';
             printf("\n\n-------------- INSTRUCTION no %d --------------\n", count);
             count++;
             uint32_t instru = 0;
@@ -60,9 +58,6 @@ int main(int argc, char **argv) {
                 printf("Instruction non reconnue \n");
                 break;
             }
-            //char hexinst[9];
-            //hexinst[8] = '\0';
-            //convertBinIntructionToHexIntruction(hexinst, inst);
             fprintf(outputFile, "%08x", instru);
             fprintf(outputFile, "\n");
         }
@@ -114,10 +109,10 @@ int getInstructionFromLine(char *line, char instruction[5], char arguments[3][5]
 }
 
 int getRegisterWithAlias(char *alias) {
-    char aliases[32][5] = { "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6" };
+    char aliases[64][5] = { "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30", "x31" };
     int register_number = 0;
     while (strcmp(alias, aliases[register_number])) register_number++;
-    return register_number;
+    return register_number%32;
 }
 
 int stringToInt(char *string) {
