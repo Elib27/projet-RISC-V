@@ -34,25 +34,24 @@ int main(int argc, char **argv) {
             switch (getIntructionType(instruction)) {
             case 'R':
                 printf("INSTRUCTION R : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                //operationR(inst, instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
                 instru = operationR(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), getRegisterWithAlias(arguments[2]));
                 break;
 
             case 'I':
                 printf("INSTRUCTION I : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                instru = operationI(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                instru = operationI(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), atoi(arguments[2]));
                 break;
             case 'S':
                 printf("INSTRUCTION S : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                instru = operationS(instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]), getRegisterWithAlias(arguments[2]));
+                instru = operationS(instruction, getRegisterWithAlias(arguments[0]), atoi(arguments[1]), getRegisterWithAlias(arguments[2]));
                 break;
             case 'B':
                 printf("INSTRUCTION B : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                instru = operationB(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), stringToInt(arguments[2]));
+                instru = operationB(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), atoi(arguments[2]));
                 break;
             case 'J':
                 printf("INSTRUCTION J : %s | OP1 : %s | OP2 : %s\n", instruction, arguments[0], arguments[1]);
-                instru = operationJ(instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]));
+                instru = operationJ(instruction, getRegisterWithAlias(arguments[0]), atoi(arguments[1]));
                 break;
             default:
                 printf("Instruction non reconnue \n");
@@ -70,62 +69,30 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-
 int getInstructionFromLine(char *line, char instruction[5], char arguments[3][5]) {
+
     if (line[0] == '#' || line[0] == '\n') return 0; // ignore les lignes vides et les commentaires
+
     // nettoyage de la chaine
     int i = 0;
     while (line[i] != '\n') {
         if (line[i] == ',') line[i] = ' ';
-        else if (line[i] == '(' || line[i] == ')') line[i] = ' ';
+        if (line[i] == '(' || line[i] == ')') line[i] = ' ';
         i++;
     }
 
-    int j = 0;
-    // skip les premiers espaces
-    while (line[j] == ' ') j++;
+    // extraction des instructions
+    int args_counter = sscanf(line, "%s %s %s %s", instruction, arguments[0], arguments[1], arguments[2]);
 
-    // extraction de l'instruction
-    while (line[j] != ' ') {
-        instruction[j] = line[j];
-        j++;
-    }
-    instruction[j] = '\0';
-
-    // extraction des arguments
-    int arg_counter = 0;
-    while (line[j] != '\n' && arg_counter < 3) {
-        while (line[j] == ' ') j++; // skip les espaces
-        int l = 0;
-        while (line[j] != ' ' && line[j] != '\n') {
-            arguments[arg_counter][l] = line[j];
-            j++;
-            l++;
-        }
-        arguments[arg_counter][l] = '\0';
-        arg_counter++;
-    }
-    return arg_counter;
+    return args_counter;
 }
 
-int getRegisterWithAlias(char *alias) {
+int getRegisterWithAlias(char *alias) { // refaire en testant si commence par x
     char aliases[64][5] = { "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30", "x31" };
     int register_number = 0;
     while (strcmp(alias, aliases[register_number])) register_number++;
-    return register_number%32;
+    return register_number % 32;
 }
-
-int stringToInt(char *string) {
-    int result = 0;
-    int i = 0;
-    while (string[i] != '\0') {
-        int c = string[i] - '0';
-        result = result * 10 + c;
-        i++;
-    }
-    return result;
-}
-
 
 #define R_TYPE_LENGTH 2
 #define I_TYPE_LENGTH 2
@@ -136,7 +103,6 @@ int stringToInt(char *string) {
 /*
     @brief renvoie le type de l'instruction ou 'X' si non reconnue
 */
-
 char getIntructionType(char *instruction) {
 
     /* tableaux des instructions par types*/
@@ -175,8 +141,6 @@ char getIntructionType(char *instruction) {
     }
     return 'X';
 }
-
-
 
 /*
     @brief converti une instruction en representation binaire en une instruction en representation hexa. Les longueurs sont fixes, 32 pour binaire et 8 pour hexa
