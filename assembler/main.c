@@ -53,6 +53,18 @@ int main(int argc, char **argv) {
                 printf("INSTRUCTION J : %s | OP1 : %s | OP2 : %s\n", instruction, arguments[0], arguments[1]);
                 instru = operationJ(instruction, getRegisterWithAlias(arguments[0]), atoi(arguments[1]));
                 break;
+            case 'j':
+                printf("INSTRUCTION j | OP1 : %s\n", arguments[0]);
+                instru = operationj(stringToInt(arguments[0]));
+                break;
+            case 'l':
+                printf("INSTRUCTION li | OP1 : %s | OP2 : %s\n", arguments[0], arguments[1]);
+                instru = operationli(getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]));
+                break;
+            case 'm':
+                printf("INSTRUCTION mv | OP1 : %s | OP2 : %s\n",arguments[0], arguments[1]);
+                instru = operationmv(getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]));
+                break;
             default:
                 printf("Instruction non reconnue \n");
                 break;
@@ -99,6 +111,7 @@ int getRegisterWithAlias(char *alias) { // refaire en testant si commence par x
 #define S_TYPE_LENGTH 1
 #define B_TYPE_LENGTH 4
 #define J_TYPE_LENGTH 1
+#define Pseudo_TYPE_LENGTH 3
 
 /*
     @brief renvoie le type de l'instruction ou 'X' si non reconnue
@@ -112,6 +125,7 @@ char getIntructionType(char *instruction) {
     char Stype[S_TYPE_LENGTH][5] = { "sd" };
     char Btype[B_TYPE_LENGTH][5] = { "beq", "bne", "blt", "bge" };
     char Jtype[J_TYPE_LENGTH][5] = { "jal" };
+    //char Pseudotype[Pseudo_TYPE_LENGTH][5] = {"j", "li", "mv"};
 
     /* recherche dans les tableaux */
     for (int i = 0; i < R_TYPE_LENGTH; i++) {
@@ -137,6 +151,15 @@ char getIntructionType(char *instruction) {
     for (int i = 0; i < J_TYPE_LENGTH; i++) {
         if (!strcmp(instruction, Jtype[i])) {
             return 'J';
+        }
+    }
+    for (int i = 0; i < Pseudo_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, "j")) {
+            return 'j';
+        } else if (!strcmp(instruction, "li")) {
+            return 'l';
+        } else if (!strcmp(instruction, "mv")) {
+            return 'm';
         }
     }
     return 'X';

@@ -23,7 +23,7 @@ Pour l'analyse de texte, nous avons décidé d'utiliser la commande getline() qu
 * Avez-vous vu des motifs récurrents émerger ? Avez-vous "factorisé" ces motifs
 pour éviter de les répéter ? Si non, serait-ce difficile ?
 
-[COMPLÉTER ICI]
+A la lecture du sujet, nous avons remarqué que beaucoup d'instructions se ressemblent. En effet, les instructions de même type ont sensiblement la même structure de données. Ceci nous a permis de les regrouper ensembles. Nous avons donc 5 facons d'encoder nous instructions au lieu d'une facon par instruction. Cela permet de simplifier grandement le code et notament la répétitivité du code.
 
 * Comment avez-vous procédé pour écrire les tests ? Étes-vous confiant·e·s que
 toutes les instructions gérées et tous les types d'arguments sont couverts ?
@@ -33,10 +33,10 @@ toutes les instructions gérées et tous les types d'arguments sont couverts ?
 * Quelle a été votre expérience avec l'utilisation et la compréhension de la
 documentation fournie sur l'encodage des instructions RISC-V ?
 
-[COMPLÉTER ICI]
+Nous avons bien compris la documentation RISC-V fournie. L'encodage des instructions est claire et permet tout de suite de bien comprendre le fonctionnement de l'encodage RISC-V.
 
 * Cochez (en remplaçant `[ ]` par `[x]`) si vous avez :
-  - [ ] Implémenté la traduction pour toutes les instructions de la documentation
+  - [x] Implémenté la traduction pour toutes les instructions de la documentation
   - [ ] Pris en compte les cas particuliers comme les valeurs immédiates négatives et le bit manquant dans l'encodage de `jal`
   - [ ] Écrit du code de gestion d'erreur pour que le programme ait une réaction propre si le code assembleur est invalide _(pas demandé par le sujet)_
 
@@ -47,8 +47,15 @@ Questions à remplir _avant_ de programmer l'émulateur (10 lignes sont conseill
 
 * Listez tous les éléments matériels auxquels vous pouvez penser dont l'émulateur doit reproduire le comportement, et déduisez-en une liste de toutes les tâches individuelles de l'émulateur.
 
-[COMPLÉTER ICI]
 
+  L'émulateur doit gérer :
+
+  - Une pile contenant les instructions de tout le programme ainsi que les valeurs stockées par le programme
+  - Une banque de 32 registres
+  - Un CPU, qui a plusieurs fonctions :
+    - Récuperer l'instruction présente dans la mémoire à l'offset du pointeur d'instruction
+    - La décoder
+-
 * Quelle fonction de la bibliothèque standard pouvez-vous utiliser pour lire les valeurs listées dans le fichier `.hex` sans vous casser la tête ? (Indice : ces valeurs ont été écrites avec `fprintf()`.)
 
 [COMPLÉTER ICI]

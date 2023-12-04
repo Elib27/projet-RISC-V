@@ -80,9 +80,9 @@ uint32_t operationI(char *instruction, int op1, int op2, int op3) {
     inst <<= 5;
     inst |= rd;
     printf("inst : %08x \n", inst);
-    inst <<= 7;
-    inst |= opcode;
-    printf("instruction finale = 0b%d \n", inst);
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("instructio finale = %08x \n", inst);
     return inst;
 }
 
@@ -114,11 +114,11 @@ uint32_t operationS(char *instruction, int op1, int op2, int op3) {
     inst <<= 3;
     inst |= funct3;
     printf("inst : %08x \n", inst);
-    inst <<= 5;
-    inst |= imm2;
-    inst <<= 7;
-    inst |= opcode;
-    printf("instruction finale = 0b%d \n", inst);
+    inst = inst << 5;
+    inst = inst | imm2;
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("instructio finale = %08x \n", inst);
     return inst;
 }
 
@@ -166,11 +166,11 @@ uint32_t operationB(char *instruction, int op1, int op2, int op3) {
     inst <<= 3;
     inst |= funct3;
     printf("inst : %08x \n", inst);
-    inst <<= 5;
-    inst |= imm2;
-    inst <<= 7;
-    inst |= opcode;
-    printf("instruction finale = 0b%d \n", inst);
+    inst = inst << 5;
+    inst = inst | imm2;
+    inst = inst << 7;
+    inst = inst | opcode;
+    printf("instructio finale = %08x \n", inst);
     return inst;
 }
 
@@ -207,8 +207,19 @@ uint32_t operationJ(char *instruction, int op1, int op2) {
     printf("inst : %08x \n", inst);
     inst <<= 7;
     printf("inst : %08x \n", inst);
-    inst |= opcode;
-    printf("instruction finale = 0b%d \n", inst);
+    inst = inst | opcode;
+    printf("instructio finale = %08x \n", inst);
     return inst;
+}
+
+uint32_t operationj(int op1) {
+    printf("valeur de l'offset j (decimal)%d\n", op1);
+    return operationJ("jal", 0, op1);
+}
+uint32_t operationli(int op1, int op2) {
+    return operationI("addi", op1, 0, op2);
+}
+uint32_t operationmv(int op1, int op2) {
+    return operationI("addi", op1, op2, 0);
 }
 
