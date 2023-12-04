@@ -54,6 +54,18 @@ int main(int argc, char **argv) {
                 printf("INSTRUCTION J : %s | OP1 : %s | OP2 : %s\n", instruction, arguments[0], arguments[1]);
                 instru = operationJ(instruction, getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]));
                 break;
+            case 'j':
+                printf("INSTRUCTION j | OP1 : %s\n", arguments[0]);
+                instru = operationj(stringToInt(arguments[0]));
+                break;
+            case 'l':
+                printf("INSTRUCTION li | OP1 : %s | OP2 : %s\n", arguments[0], arguments[1]);
+                instru = operationli(getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]));
+                break;
+            case 'm':
+                printf("INSTRUCTION mv | OP1 : %s | OP2 : %s\n",arguments[0], arguments[1]);
+                instru = operationmv(getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]));
+                break;
             default:
                 printf("Instruction non reconnue \n");
                 break;
@@ -112,7 +124,7 @@ int getRegisterWithAlias(char *alias) {
     char aliases[64][5] = { "zero", "ra", "sp", "gp", "tp", "t0", "t1", "t2", "s0", "s1", "a0", "a1", "a2", "a3", "a4", "a5", "a6", "a7", "s2", "s3", "s4", "s5", "s6", "s7", "s8", "s9", "s10", "s11", "t3", "t4", "t5", "t6", "x0", "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "x15", "x16", "x17", "x18", "x19", "x20", "x21", "x22", "x23", "x24", "x25", "x26", "x27", "x28", "x29", "x30", "x31" };
     int register_number = 0;
     while (strcmp(alias, aliases[register_number])) register_number++;
-    return register_number%32;
+    return register_number % 32;
 }
 
 int stringToInt(char *string) {
@@ -132,6 +144,7 @@ int stringToInt(char *string) {
 #define S_TYPE_LENGTH 1
 #define B_TYPE_LENGTH 4
 #define J_TYPE_LENGTH 1
+#define Pseudo_TYPE_LENGTH 3
 
 /*
     @brief renvoie le type de l'instruction ou 'X' si non reconnue
@@ -146,6 +159,7 @@ char getIntructionType(char *instruction) {
     char Stype[S_TYPE_LENGTH][5] = { "sd" };
     char Btype[B_TYPE_LENGTH][5] = { "beq", "bne", "blt", "bge" };
     char Jtype[J_TYPE_LENGTH][5] = { "jal" };
+    //char Pseudotype[Pseudo_TYPE_LENGTH][5] = {"j", "li", "mv"};
 
     /* recherche dans les tableaux */
     for (int i = 0; i < R_TYPE_LENGTH; i++) {
@@ -171,6 +185,15 @@ char getIntructionType(char *instruction) {
     for (int i = 0; i < J_TYPE_LENGTH; i++) {
         if (!strcmp(instruction, Jtype[i])) {
             return 'J';
+        }
+    }
+    for (int i = 0; i < Pseudo_TYPE_LENGTH; i++) {
+        if (!strcmp(instruction, "j")) {
+            return 'j';
+        } else if (!strcmp(instruction, "li")) {
+            return 'l';
+        } else if (!strcmp(instruction, "mv")) {
+            return 'm';
         }
     }
     return 'X';

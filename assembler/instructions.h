@@ -6,3 +6,6 @@ uint32_t operationI(char *instruction, int op1, int op2, int op3);
 uint32_t operationS(char *instruction, int op1, int op2, int op3);
 uint32_t operationB(char *instruction, int op1, int op2, int op3);
 uint32_t operationJ(char *instruction, int op1, int op2);
+uint32_t operationj(int op1);
+uint32_t operationli(int op1, int op2);
+uint32_t operationmv(int op1, int op2);
