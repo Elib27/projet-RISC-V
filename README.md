@@ -54,8 +54,10 @@ Questions à remplir _avant_ de programmer l'émulateur (10 lignes sont conseill
   - Une banque de 32 registres
   - Un CPU, qui a plusieurs fonctions :
     - Récuperer l'instruction présente dans la mémoire à l'offset du pointeur d'instruction
-    - La décoder
--
+    - La décoder, récuperer les bons paramètres en fonctions de l'instruction
+    - Lire les bonnes valeurs dans la mémoire si besoin
+    - executer les changements sur les registres
+    - appliquer les changements sur la mémoire
 * Quelle fonction de la bibliothèque standard pouvez-vous utiliser pour lire les valeurs listées dans le fichier `.hex` sans vous casser la tête ? (Indice : ces valeurs ont été écrites avec `fprintf()`.)
 
 [COMPLÉTER ICI]
