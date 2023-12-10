@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
+#include <stdlib.h>
+
+
 #include "main.h"
 
 /*
@@ -46,22 +49,22 @@ uint32_t operationR(char *instruction, int op1, int op2, int op3) {
 /*
     @brief transform I type instrucion un binary representation
 */
-uint32_t operationI(char *instruction, int op1, int op2, int op3) {
+uint32_t operationI(char *instruction, char* op1, char* op2, char* op3) {
 
     uint32_t imm = 0;
     uint32_t rs1 = 0;
     uint32_t funct3 = 0;
-    uint32_t rd = op1;
+    uint32_t rd = getRegisterWithAlias(op1);
     uint32_t opcode = 0;
 
     if (!strcmp(instruction, "addi")) {
-        imm = op3;
-        rs1 = op2;
+        imm = atoi(op3);
+        rs1 = getRegisterWithAlias(op2);
         opcode = 0b0010011;
     }
     else if (!strcmp(instruction, "ld")) {
-        imm = op2;
-        rs1 = op3;
+        imm = atoi(op2);
+        rs1 = getRegisterWithAlias(op3);
         funct3 = 0x3;
         opcode = 0b0000011;
     }
@@ -179,13 +182,14 @@ uint32_t operationB(char *instruction, int op1, int op2, int op3) {
 */
 uint32_t operationJ(char *instruction, int op1, int op2) {
 
-    uint32_t imm = op2;
+    uint32_t imm = 0;
+    imm = imm | op2;
     uint32_t rd = op1;
     uint32_t opcode = 0b1101111;
 
     // mise en forme de la valeur immediate
     uint32_t imm1 = (imm >> 20) & 0b1;
-    uint32_t imm2 = (imm >> 1) & 0b11111111;
+    uint32_t imm2 = (imm >> 1) & 0b1111111111;
     uint32_t imm3 = (imm >> 11) & 0b1;
     uint32_t imm4 = (imm >> 12) & 0b11111111;
 
@@ -216,10 +220,10 @@ uint32_t operationj(int op1) {
     printf("valeur de l'offset j (decimal)%d\n", op1);
     return operationJ("jal", 0, op1);
 }
-uint32_t operationli(int op1, int op2) {
-    return operationI("addi", op1, 0, op2);
+uint32_t operationli(char* op1, char* op2) {
+    return operationI("addi", op1, "x0", op2);
 }
-uint32_t operationmv(int op1, int op2) {
-    return operationI("addi", op1, op2, 0);
+uint32_t operationmv(char* op1, char* op2) {
+    return operationI("addi", op1, op2, "0");
 }
 

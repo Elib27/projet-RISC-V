@@ -24,13 +24,15 @@ int main(int argc, char **argv) {
     int count = 0;
     while (getline(&line, &len, inputFile) != -1) {
         char instruction[5];
-        char arguments[3][5];
+        char arguments[3][10];
         int args_count = getInstructionFromLine(line, instruction, arguments);
         if (args_count > 0) {
-            printf("instruction: %s, args_count: %d\n", instruction, args_count);
             printf("\n\n-------------- INSTRUCTION no %d --------------\n", count);
+            printf("line : %s\n", line);
+            printf("instruction: %s, args_count: %d\n", instruction, args_count);
             count++;
             uint32_t instru = 0;
+            printf("nom: %s\n", instruction);
             switch (getIntructionType(instruction)) {
             case 'R':
                 printf("INSTRUCTION R : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
@@ -39,7 +41,7 @@ int main(int argc, char **argv) {
 
             case 'I':
                 printf("INSTRUCTION I : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
-                instru = operationI(instruction, getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]), atoi(arguments[2]));
+                instru = operationI(instruction, arguments[0], arguments[1], arguments[2]);
                 break;
             case 'S':
                 printf("INSTRUCTION S : %s | OP1 : %s | OP2 : %s | OP3 : %s\n", instruction, arguments[0], arguments[1], arguments[2]);
@@ -55,15 +57,15 @@ int main(int argc, char **argv) {
                 break;
             case 'j':
                 printf("INSTRUCTION j | OP1 : %s\n", arguments[0]);
-                instru = operationj(stringToInt(arguments[0]));
+                instru = operationj(atoi(arguments[0]));
                 break;
             case 'l':
                 printf("INSTRUCTION li | OP1 : %s | OP2 : %s\n", arguments[0], arguments[1]);
-                instru = operationli(getRegisterWithAlias(arguments[0]), stringToInt(arguments[1]));
+                instru = operationli(arguments[0], arguments[1]);
                 break;
             case 'm':
                 printf("INSTRUCTION mv | OP1 : %s | OP2 : %s\n",arguments[0], arguments[1]);
-                instru = operationmv(getRegisterWithAlias(arguments[0]), getRegisterWithAlias(arguments[1]));
+                instru = operationmv(arguments[0], arguments[1]);
                 break;
             default:
                 printf("Instruction non reconnue \n");
@@ -81,7 +83,7 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-int getInstructionFromLine(char *line, char instruction[5], char arguments[3][5]) {
+int getInstructionFromLine(char *line, char instruction[5], char arguments[3][10]) {
 
     if (line[0] == '#' || line[0] == '\n') return 0; // ignore les lignes vides et les commentaires
 
