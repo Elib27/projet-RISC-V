@@ -7,7 +7,7 @@
 #include "main.h"
 
 /*
-    @brief transform R type instrucion un binary representation
+    @brief transform R type instruction in binary representation
 */
 uint32_t operationR(char *instruction, int op1, int op2, int op3) {
 
@@ -47,9 +47,9 @@ uint32_t operationR(char *instruction, int op1, int op2, int op3) {
 }
 
 /*
-    @brief transform I type instrucion un binary representation
+    @brief transform I type instruction in binary representation
 */
-uint32_t operationI(char *instruction, char* op1, char* op2, char* op3) {
+uint32_t operationI(char *instruction, char *op1, char *op2, char *op3) {
 
     uint32_t imm = 0;
     uint32_t rs1 = 0;
@@ -85,12 +85,12 @@ uint32_t operationI(char *instruction, char* op1, char* op2, char* op3) {
     printf("inst : %08x \n", inst);
     inst = inst << 7;
     inst = inst | opcode;
-    printf("instructio finale = %08x \n", inst);
+    printf("instruction finale = %08x \n", inst);
     return inst;
 }
 
 /*
-    @brief transform S type instrucion un binary representation
+    @brief transform S type instruction in binary representation
 */
 uint32_t operationS(char *instruction, int op1, int op2, int op3) {
 
@@ -121,13 +121,12 @@ uint32_t operationS(char *instruction, int op1, int op2, int op3) {
     inst = inst | imm2;
     inst = inst << 7;
     inst = inst | opcode;
-    printf("instructio finale = %08x \n", inst);
+    printf("instruction finale = %08x \n", inst);
     return inst;
 }
 
-
 /*
-    @brief transform B type instrucion un binary representation
+    @brief transform B type instruction in binary representation
 */
 uint32_t operationB(char *instruction, int op1, int op2, int op3) {
 
@@ -173,12 +172,12 @@ uint32_t operationB(char *instruction, int op1, int op2, int op3) {
     inst = inst | imm2;
     inst = inst << 7;
     inst = inst | opcode;
-    printf("instructio finale = %08x \n", inst);
+    printf("instruction finale = %08x \n", inst);
     return inst;
 }
 
 /*
-    @brief transform J type instrucion un binary representation
+    @brief transform J type instruction in binary representation
 */
 uint32_t operationJ(char *instruction, int op1, int op2) {
 
@@ -212,7 +211,7 @@ uint32_t operationJ(char *instruction, int op1, int op2) {
     inst <<= 7;
     printf("inst : %08x \n", inst);
     inst = inst | opcode;
-    printf("instructio finale = %08x \n", inst);
+    printf("instruction finale = %08x \n", inst);
     return inst;
 }
 
@@ -220,10 +219,9 @@ uint32_t operationj(int op1) {
     printf("valeur de l'offset j (decimal)%d\n", op1);
     return operationJ("jal", 0, op1);
 }
-uint32_t operationli(char* op1, char* op2) {
+uint32_t operationli(char *op1, char *op2) {
     return operationI("addi", op1, "x0", op2);
 }
-uint32_t operationmv(char* op1, char* op2) {
+uint32_t operationmv(char *op1, char *op2) {
     return operationI("addi", op1, op2, "0");
 }
-

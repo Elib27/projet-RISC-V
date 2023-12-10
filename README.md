@@ -17,18 +17,18 @@ Auteurs : BAS Eliot et ARNAUD-GODDET Etienne
 * Comment avez-vous choisi de programmer l'analyse de texte (dont la lecture
 des opérandes entières) ? Comment identifiez-vous les noms de registres, des noms "jolis", des entiers ?
 
-Pour l'analyse de texte, nous avons décidé d'utiliser la commande getline() qui nous retourne la figne entière. Nous avons ensuite remplacé les virgules et parenthèses par des espaces pour nettoyer l'instruction. Nous avons ensuite extrait l'instruction en la sauvgardant dans une variable. Ceci rendra plus simple la recherche de l'instruction parmis toutes celles implémentées. Pour identifier les noms de registres, des noms "jolis", des entiers, on teste si l'argument est un nom de registre, puis un entier, sinon c'est un nom "joli".
+Pour l'analyse de texte, nous avons décidé d'utiliser la commande getline() qui nous retourne la ligne entière. On remplace les virgules et parenthèses par des espaces pour nettoyer l'instruction. On extrait ensuite l'instruction et les arguments dans des variables avec la fonction sscanf. Ceci rendra plus simple la recherche de l'instruction parmis toutes celles implémentées. Pour identifier les noms de registres, des noms "jolis", des entiers, on teste si l'argument est un nom de registre, puis un entier, sinon c'est un nom "joli".
 
 
 * Avez-vous vu des motifs récurrents émerger ? Avez-vous "factorisé" ces motifs
 pour éviter de les répéter ? Si non, serait-ce difficile ?
 
-A la lecture du sujet, nous avons remarqué que beaucoup d'instructions se ressemblent. En effet, les instructions de même type ont sensiblement la même structure de données. Ceci nous a permis de les regrouper ensembles. Nous avons donc 5 facons d'encoder nous instructions au lieu d'une facon par instruction. Cela permet de simplifier grandement le code et notament la répétitivité du code.
+A la lecture du sujet, nous avons remarqué que beaucoup d'instructions se ressemblaient. En effet, les instructions de même type ont sensiblement la même structure. Ceci nous a permis de les regrouper les instructions d'un même type dans une même fonction. Nous avons donc 5 facons d'encoder nos instructions au lieu d'une facon différente par instruction. Il suffit simplement de tester quelle est l'instruction dans la fonction pour appliquer les changements spécifiques à cette instruction si nécessaire. Cela permet de simplifier grandement le code et notament la répétition du code.
 
 * Comment avez-vous procédé pour écrire les tests ? Étes-vous confiant·e·s que
 toutes les instructions gérées et tous les types d'arguments sont couverts ?
 
-[COMPLÉTER ICI]
+Concernant les tests, nous avons testé chaque instruction avec des arguments différents. Tous les types d'arguments: registres, les valeurs immédiates positives et négatives. Tous les registres ont été testés avec leur alias et leurs numéro.
 
 * Quelle a été votre expérience avec l'utilisation et la compréhension de la
 documentation fournie sur l'encodage des instructions RISC-V ?
