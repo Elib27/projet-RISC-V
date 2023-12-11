@@ -28,7 +28,7 @@ A la lecture du sujet, nous avons remarqué que beaucoup d'instructions se resse
 * Comment avez-vous procédé pour écrire les tests ? Étes-vous confiant·e·s que
 toutes les instructions gérées et tous les types d'arguments sont couverts ?
 
-Concernant les tests, nous avons testé chaque instruction avec des arguments différents. Tous les types d'arguments: registres, les valeurs immédiates positives et négatives. Tous les registres ont été testés avec leur alias et leurs numéro.
+Concernant les tests, nous avons testé chaque instruction avec des arguments différents. Tous les types d'arguments: registres, les valeurs immédiates positives et négatives (valeurs tstées aux bornes). Tous les registres ont été testés avec leur alias et leurs numéro pour bien assurer leur reconnaissance par le programme.
 
 * Quelle a été votre expérience avec l'utilisation et la compréhension de la
 documentation fournie sur l'encodage des instructions RISC-V ?
@@ -50,17 +50,21 @@ Questions à remplir _avant_ de programmer l'émulateur (10 lignes sont conseill
 
   L'émulateur doit gérer :
 
-  - Une pile contenant les instructions de tout le programme ainsi que les valeurs stockées par le programme
+  - Une mémoire contenant les instructions de tout le programme ainsi que les valeurs stockées par le programme
   - Une banque de 32 registres
-  - Un CPU, qui a plusieurs fonctions :
+  - Un CPU, qui a plusieurs fonctions
+  
+  Les tâches de l'émulateurs sont les suivantes :
     - Récuperer l'instruction présente dans la mémoire à l'offset du pointeur d'instruction
     - La décoder, récuperer les bons paramètres en fonctions de l'instruction
     - Lire les bonnes valeurs dans la mémoire si besoin
-    - executer les changements sur les registres
-    - appliquer les changements sur la mémoire
+    - Executer les changements sur les registres
+    - Appliquer les changements sur la mémoire
+  
+
 * Quelle fonction de la bibliothèque standard pouvez-vous utiliser pour lire les valeurs listées dans le fichier `.hex` sans vous casser la tête ? (Indice : ces valeurs ont été écrites avec `fprintf()`.)
 
-[COMPLÉTER ICI]
+Pour lire le fichier `.hex`, nous allons utilliser l'instruction `fscanf()` avec le format %08x. Cela va nous retourner les instrutions sous forme d'ntiers que nous pourons manipuler ensuite dans le décodage de notre émulateur.
 
 * Décrivez comment vous allez répartir les tâches de l'émulateur en différents fichiers, ou ne pas les répartir et tout faire dans le même fichier. Expliquez les avantages de votre choix.
 
