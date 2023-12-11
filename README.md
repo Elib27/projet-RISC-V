@@ -17,7 +17,7 @@ Auteurs : BAS Eliot et ARNAUD-GODDET Etienne
 * Comment avez-vous choisi de programmer l'analyse de texte (dont la lecture
 des opérandes entières) ? Comment identifiez-vous les noms de registres, des noms "jolis", des entiers ?
 
-Pour l'analyse de texte, nous avons décidé d'utiliser la commande getline() qui nous retourne la ligne entière. On remplace les virgules et parenthèses par des espaces pour nettoyer l'instruction. On extrait ensuite l'instruction et les arguments dans des variables avec la fonction sscanf. Ceci rendra plus simple la recherche de l'instruction parmis toutes celles implémentées. Pour identifier les noms de registres, des noms "jolis", des entiers, on teste si l'argument est un nom de registre, puis un entier, sinon c'est un nom "joli".
+Pour l'analyse de texte, nous avons décidé d'utiliser la commande `getline()` qui nous retourne la ligne entière. On remplace les virgules et parenthèses par des espaces pour nettoyer l'instruction. On extrait ensuite l'instruction et les arguments dans des variables avec la fonction sscanf. Ceci rendra plus simple la recherche de l'instruction parmis toutes celles implémentées. Pour identifier les noms de registres, des noms "jolis", des entiers, on teste si l'argument est un nom de registre, puis un entier, sinon c'est un nom "joli".
 
 
 * Avez-vous vu des motifs récurrents émerger ? Avez-vous "factorisé" ces motifs
@@ -37,7 +37,7 @@ Nous avons bien compris la documentation RISC-V fournie. L'encodage des instruct
 
 * Cochez (en remplaçant `[ ]` par `[x]`) si vous avez :
   - [x] Implémenté la traduction pour toutes les instructions de la documentation
-  - [ ] Pris en compte les cas particuliers comme les valeurs immédiates négatives et le bit manquant dans l'encodage de `jal`
+  - [x] Pris en compte les cas particuliers comme les valeurs immédiates négatives et le bit manquant dans l'encodage de `jal`
   - [ ] Écrit du code de gestion d'erreur pour que le programme ait une réaction propre si le code assembleur est invalide _(pas demandé par le sujet)_
 
 
