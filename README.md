@@ -64,7 +64,7 @@ Questions à remplir _avant_ de programmer l'émulateur (10 lignes sont conseill
 
 * Quelle fonction de la bibliothèque standard pouvez-vous utiliser pour lire les valeurs listées dans le fichier `.hex` sans vous casser la tête ? (Indice : ces valeurs ont été écrites avec `fprintf()`.)
 
-Pour lire le fichier `.hex`, nous allons utilliser l'instruction `fscanf()` avec le format %08x. Cela va nous retourner les instrutions sous forme d'ntiers que nous pourons manipuler ensuite dans le décodage de notre émulateur.
+Pour lire le fichier `.hex`, nous allons utilliser l'instruction `fscanf()` avec le format %08x. Cela va nous retourner les instrutions sous forme d'entiers que nous pourons manipuler ensuite dans le décodage de notre émulateur.
 
 * Décrivez comment vous allez répartir les tâches de l'émulateur en différents fichiers, ou ne pas les répartir et tout faire dans le même fichier. Expliquez les avantages de votre choix.
 
