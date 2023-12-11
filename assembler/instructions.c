@@ -98,7 +98,12 @@ uint32_t operationS(char *instruction, int op1, int op2, int op3) {
     uint32_t rs2 = op1;
     uint32_t rs1 = op3;
     uint32_t funct3 = 0x3;
-    uint32_t opcode = 0b0100011;
+    uint32_t opcode;
+
+    if (!strcmp(instruction, "sd")) {
+        opcode = 0b0100011;
+    }
+
     // decoupage de la valeur immediate
     uint32_t imm1 = imm >> 5;
     uint32_t imm2 = imm & 0b11111;
@@ -184,7 +189,11 @@ uint32_t operationJ(char *instruction, int op1, int op2) {
     uint32_t imm = 0;
     imm = imm | op2;
     uint32_t rd = op1;
-    uint32_t opcode = 0b1101111;
+    uint32_t opcode;
+
+    if (!strcmp(instruction, "jal")) {
+        opcode = 0b1101111;
+    }
 
     // mise en forme de la valeur immediate
     uint32_t imm1 = (imm >> 20) & 0b1;
