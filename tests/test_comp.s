@@ -1,1 +1,5 @@
-addi x1, zero, 1
+addi x1, zero, -2
+
+# EXPECTED
+# sp: 16384
+# ra: -2
