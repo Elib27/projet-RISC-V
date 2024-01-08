@@ -8,31 +8,35 @@
 #define BEQ_BNE_BLT_BGE 0b1100011
 #define             JAL 0b1101111
 
+#define INITIAL_SP 16384
+
+#define sp 2
+
 
 typedef struct {
     uint32_t pc; // un registre pc 
-    uint64_t registres[32]; // 32 registes
-    uint64_t memoire[2048]; // 2048 lignes de 8 octets dans la memoire
+    uint64_t registres[32]; // 32 registes de 64 bits chacuns
+    uint64_t memoire[2048]; // 2048 lignes de 8 octets dans la memoire = 16Kio
 } Memoire;
 
-void printmem(Memoire *mem) {
-    for (int i = 0; i < 20; i++) {
+void printmem(Memoire *mem, int size) {
+    for (int i = 0; i < size; i++) {
         printf("%16lx \n", mem->memoire[i]);
     }
-
 }
+
 void printregistres(Memoire *mem) {
     for (int i = 0; i < 32; i++) {
         printf(" x%d : %ld \n", i, mem->registres[i]);
     }
 }
 
-void initRegistres(Memoire *mem) {
+void initMemoire(Memoire *mem) {
     mem->pc = 0;
     for (int i = 0; i < 32; i++) {
         mem->registres[i] = 0;
     }
-    mem->registres[2] = 16384; // pc
+    mem->registres[2] = INITIAL_SP;
 }
 
 void lectureProgramme(Memoire *mem, FILE *inputFile) {
@@ -54,14 +58,13 @@ void lectureProgramme(Memoire *mem, FILE *inputFile) {
     }
 }
 
-
 int executeInstruction(uint32_t instruction, Memoire *memoire) {
     uint32_t inst = instruction & 0b1111111;
     int skip_pc = 0;
 
     switch (inst) {
 
-    case ADD_SUB: // remplacer par #DEFINE
+    case ADD_SUB:
     {
         printf("------------ADD_SUB----------\n");
         uint32_t funct7 = instruction >> 25;
@@ -69,27 +72,28 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t rs1 = (instruction >> 15) & 0b11111;
         uint32_t rs2 = (instruction >> 20) & 0b11111;
 
-        
+
         if (funct7 == 0b0) {
             // addition
             memoire->registres[rd] = memoire->registres[rs1] + memoire->registres[rs2];
-        } else {// funct7== 0x02
+        }
+        else {// funct7== 0x02
             // soustraction
             memoire->registres[rd] = memoire->registres[rs1] - memoire->registres[rs2];
-        } 
-        
+        }
+
         break;
     }
-    
-    //addi => voir bit de signe
+
     case ADDI:
     {
         printf("------------ADDI----------\n");
         uint64_t imm = instruction >> 20;
 
-        if ((imm >> 11) == 1) {                     // dans le cas d'ne valeur néagtve
+        if ((imm >> 11) == 1) {                     // dans le cas d'une valeur néagtve
             imm = imm | 0xfffffffffffff000;
         }
+
         uint32_t rs1 = (instruction >> 15) & 0b11111;
         uint32_t funct3 = (instruction >> 12) & 0b111;
         uint32_t rd = (instruction >> 7) & 0b11111;
@@ -100,13 +104,14 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         break;
     }
 
-    //ld
     case LD:
     {
         uint64_t imm = instruction >> 20;
-        if ((imm >> 11) == 1) {                     // dans le cas d'ne valeur néagtve
+
+        if ((imm >> 11) == 1) {                     // dans le cas d'une valeur négative
             imm = imm | 0xfffffffffffff000;
         }
+
         uint32_t rs1 = (instruction >> 14) & 0b11111;
         uint32_t funct3 = (instruction >> 12) & 0b111;
         uint32_t rd = (instruction >> 7) & 0b11111;
@@ -114,7 +119,6 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         break;
     }
 
-    // sd
     case SD:
     {
         uint32_t imm1 = instruction >> 25;
@@ -123,9 +127,11 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t funct3 = (instruction >> 12) & 0b111;
         uint32_t imm2 = (instruction >> 7) & 0b11111;
         uint64_t imm = (imm1 << 5) | imm2;
-        if ((imm >> 11) == 1) {                     // dans le cas d'ne valeur néagtve
+
+        if ((imm >> 11) == 1) {                     // dans le cas d'une valeur néagtve
             imm = imm | 0xfffffffffffff000;
         }
+
         memoire->memoire[rs1 + imm] = memoire->registres[rs2];
         break;
     }
@@ -138,20 +144,11 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t rs1 = (instruction >> 15) & 0b11111;
         uint32_t funct3 = (instruction >> 12) & 0b111;
         uint32_t imm2 = (instruction >> 7) & 0b11111;
-      //uint32_t imm = ((imm1 >> 7) << 31) | (imm2 & 1) << 30 | (imm1 && 0b111111) << 23 | (imm2 >> 1);
         uint64_t imm = ((imm1 >> 7) << 12) | (imm2 & 1) << 11 | (imm1 && 0b111111) << 5 | (imm2 >> 1) << 1;
 
-        if ((imm >> 12) == 1) {                     // dans le cas d'ne valeur néagtve
+        if ((imm >> 12) == 1) {                   // dans le cas d'une valeur négative
             imm = imm | 0xffffffffffffe000;
         }
-
-        // DEBUG
-
-        printf("Value rs1 : %ld\n", memoire->registres[rs1]);
-        printf("rs1 = x%d\n", rs1);
-        printf("Value rs2 : %ld\n", memoire->registres[rs2]);
-        printf("Value imm : %ld\n", imm);
-        
 
         // beq
         if ((funct3 == 0x0) && (memoire->registres[rs1] == memoire->registres[rs2])) {
@@ -176,8 +173,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         }
         break;
     }
-    
-    // jal
+
     case JAL:
     {
         printf("---------JAL-----------\n");
@@ -185,8 +181,6 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t imm = (instruction >> 12) & 0b111111111111111111111;
         printf("imm de j (mélangé) : %x\n", imm);
 
-        // remise en ordre de l'immediat
-      //uint32_t new_imm = (instruction >> 31) | ((instruction >> 21) & 0b1111111111) | ((instruction >> 19) & 0b1) | ((instruction >> 12) & 0b11111111);
         uint64_t new_imm = (imm & 0b10000000000000000000) << 1 | (imm & 0b01111111111000000000) >> 8 | (imm & 0b00000000000100000000) << 3 | (imm & 0b00000000000011111111) << 12;
 
         if ((new_imm >> 20) == 1) {                     // dans le cas d'ne valeur néagtve
@@ -198,12 +192,15 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         printf("imm de j (trié en hexa)): %16lx\n", new_imm);
         printf("imm de j (trié en décimal): %ld\n", new_imm);
         skip_pc = 1;
-        
+
         break;
     }
-    
+
     default:
+    {
+        printf("Erreur: Instruction non reconnue.");
         break;
+    }
     }
     return skip_pc;
 }
@@ -246,13 +243,13 @@ int main(int argc, char **argv) {
     Memoire memoire;
 
     // mise a zero des registres
-    initRegistres(&memoire);
+    initMemoire(&memoire);
 
     // mise de programme en mémoire
     lectureProgramme(&memoire, inputFile);
 
 
-    printmem(&memoire);
+    printmem(&memoire, 20);
     printregistres(&memoire);
 
     // boucle
@@ -264,11 +261,8 @@ int main(int argc, char **argv) {
     instruction = lectureInstruction(&memoire);
 
     while (instruction != 0) {
-        //uint32_t inst;
-        //uint32_t arguments[3];
-        // lecture
         skip_pc = executeInstruction(instruction, &memoire);
-        if (!skip_pc) {
+        if (!skip_pc) { // mettre dans chaque fonction
             memoire.pc = memoire.pc + 4;
             skip_pc = 1;
         }
