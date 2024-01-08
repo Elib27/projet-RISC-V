@@ -1,0 +1,235 @@
+============================= test session starts ==============================
+collecting ... collected 4 items
+
+test.py::TestRISCVAssembler::test_assembler[./tests/prog2.s] PASSED      [ 25%]
+test.py::TestRISCVAssembler::test_assembler[./tests/prog3.s] PASSED      [ 50%]
+test.py::TestRISCVEmulation::test_emulator[./tests/prog2.s] PASSED       [ 75%]
+test.py::TestRISCVEmulation::test_emulator[./tests/prog3.s] FAILED       [100%]
+
+=================================== FAILURES ===================================
+______________ TestRISCVEmulation.test_emulator[./tests/prog3.s] _______________
+test.py:213: in test_emulator
+    assert_equal_regs(expected, state)
+test.py:95: in assert_equal_regs
+    pytest.fail(msg)
+E   Failed: 
+E   - x2 (sp) should be 16384, but it is 16376
+----------------------------- Captured stdout call -----------------------------
+  a0029300000513 
+ff81011300550a63 
+  15051300a13023 
+        ff5ff06f 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+ x0 : 0 
+ x1 : 0 
+ x2 : 16384 
+ x3 : 0 
+ x4 : 0 
+ x5 : 0 
+ x6 : 0 
+ x7 : 0 
+ x8 : 0 
+ x9 : 0 
+ x10 : 0 
+ x11 : 0 
+ x12 : 0 
+ x13 : 0 
+ x14 : 0 
+ x15 : 0 
+ x16 : 0 
+ x17 : 0 
+ x18 : 0 
+ x19 : 0 
+ x20 : 0 
+ x21 : 0 
+ x22 : 0 
+ x23 : 0 
+ x24 : 0 
+ x25 : 0 
+ x26 : 0 
+ x27 : 0 
+ x28 : 0 
+ x29 : 0 
+ x30 : 0 
+ x31 : 0 
+------------ADDI----------
+rs1 : 0
+rd : 10
+imm : 0 
+  a0029300000513 
+ff81011300550a63 
+  15051300a13023 
+        ff5ff06f 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+------------ADDI----------
+rs1 : 0
+rd : 5
+imm : a 
+  a0029300000513 
+ff81011300550a63 
+  15051300a13023 
+        ff5ff06f 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+------------BEQ_BNE_BLT_BGE----------
+  a0029300000513 
+ff81011300550a63 
+  15051300a13023 
+        ff5ff06f 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+------------ADDI----------
+rs1 : 2
+rd : 2
+imm : fffffffffffffff8 
+  a0029300000513 
+ff81011300550a63 
+  15051300a13023 
+        ff5ff06f 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+  a0029300000513 
+ff81011300550a63 
+               0 
+        ff5ff06f 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+               0 
+=========================== short test summary info ============================
+FAILED test.py::TestRISCVEmulation::test_emulator[./tests/prog3.s] - Failed: 
+========================= 1 failed, 3 passed in 0.35s ==========================

@@ -106,6 +106,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
 
     case LD:
     {
+        printf("------------LD----------\n");
         uint64_t imm = instruction >> 20;
 
         if ((imm >> 11) == 1) {                     // dans le cas d'une valeur négative
@@ -121,6 +122,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
 
     case SD:
     {
+        printf("------------SD----------\n");
         uint32_t imm1 = instruction >> 25;
         uint32_t rs2 = (instruction >> 20) & 0b11111;
         uint32_t rs1 = (instruction >> 15) & 0b11111;
@@ -132,6 +134,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
             imm = imm | 0xfffffffffffff000;
         }
 
+        printf("Case modifiée : %ld \n", (rs1 + imm));
         memoire->memoire[rs1 + imm] = memoire->registres[rs2];
         break;
     }
@@ -158,16 +161,19 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         }
         // bne
         if (funct3 == 0x1 && memoire->registres[rs1] != memoire->registres[rs2]) {
+            printf("bne ok\n");
             memoire->pc += imm;
             skip_pc = 1;
         }
         // blt
         if (funct3 == 0x4 && memoire->registres[rs1] < memoire->registres[rs2]) {
+            printf("blt ok\n");
             memoire->pc += imm;
             skip_pc = 1;
         }
         // bge
         if (funct3 == 0x5 && memoire->registres[rs1] >= memoire->registres[rs2]) {
+            printf("bge ok\n");
             memoire->pc += imm;
             skip_pc = 1;
         }
@@ -268,6 +274,8 @@ int main(int argc, char **argv) {
         }
         memoire.registres[0] = 0;
         instruction = lectureInstruction(&memoire);
+        printf("instruction suivante : %lx \n", instruction);
+        printmem(&memoire, 5);
     }
 
     ecrireSortie(memoire, outputFile);

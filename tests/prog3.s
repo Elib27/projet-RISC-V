@@ -1,23 +1,21 @@
 
-addi a0 , zero, 1
+addi a0 , zero, 0
+addi t0, zero, 10
+
 
 # empilage
-bne a0, 10, 20
+beq a0, t0, 20
 addi sp, sp, -8
 sd a0, 0(sp)
 addi a0, a0, 1
-j -16
-
-# depilage
-addi a0, aO -1
-bne a0, 0, 24
-ld a1, 0(sp)
-addi sp, sp 8
-bne a0, a1, 8
-j -20
-addi a0, zero, -1
+j -12
+#addi s0, zero, 1
 
 
 
 
 # EXPECTED
+# sp : 16384
+# a0 : 0
+# t0 : 10
+# a1 : 0
