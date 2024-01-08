@@ -5,3 +5,4 @@ riscv-assembler
 riscv-emulator
 /__pycache__
 *.hex
+.vscode

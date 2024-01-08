@@ -11,12 +11,12 @@ void printmem(Memoire *mem) {
     for (int i = 0; i < 20; i++) {
         printf("%16lx \n", mem->memoire[i]);
     }
-    
+
 }
 void printregistres(Memoire *mem) {
     for (int i = 0; i < 32; i++) {
         printf(" x%d : %d \n", i, mem->registres[i]);
-    }  
+    }
 }
 
 void initRegistres(Memoire *mem) {
@@ -33,11 +33,10 @@ void lectureProgramme(Memoire *mem, FILE *inputFile) {
     int i = 0;
     int j = 0;
     while (fscanf(inputFile, "%08x\n", &line) != -1) {
-
-        
-        if ((j%2) == 0) {
+        if ((j % 2) == 0) {
             mem->memoire[i] = line;
-        } else {
+        }
+        else {
             uint64_t line2 = line;
             line2 <<= 32;
             mem->memoire[i] |= line2;
@@ -48,30 +47,30 @@ void lectureProgramme(Memoire *mem, FILE *inputFile) {
 
 }
 
+// void extractInstruction(uint32_t instruction, uint32_t *inst, uint32_t arguments[3]) {
+//     // a faire
 
-void extractInstruction(uint32_t instruction, uint32_t* inst, uint32_t arguments[3]) {
-    // a faire
-}
+// }
 
 void executeInstruction(uint32_t inst, uint32_t arguments[3], Memoire memoire) {
-    // GROS switch
+
 }
 
 uint32_t lectureInstruction(Memoire *memoire) {
     uint32_t instruction = 0;
-    if ((memoire->pc %2) == 0) {
+    if ((memoire->pc % 2) == 0) {
         instruction = memoire->memoire[memoire->pc] & 0xffffffff;
-    } else {
+    }
+    else {
         instruction = (memoire->memoire[memoire->pc] >> 32) & 0xffffffff;
     }
     return instruction;
 }
 
 
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
     /* ./riscv-emulator <HEX INPUT> <EMULATION OUTPUT> */
-    if(argc != 3) {
+    if (argc != 3) {
         printf("Usage: ./riscv-emulator <HEX INPUT> <EMULATION OUTPUT>\n");
         printf("error: invalid command\n");
         return 1;
@@ -110,7 +109,7 @@ int main(int argc, char **argv)
         extractInstruction(instruction, &inst, arguments[3]);
         executeInstruction(inst, arguments[3], &memoire);
     }
-    
+
     fclose(inputFile);
     fclose(outputFile);
 
