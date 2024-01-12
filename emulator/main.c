@@ -119,12 +119,12 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t rd = (instruction >> 7) & 0b11111;
 
         printf("rs1 : %d\n", rs1);
-        printf("valeur de rs1 : %d\n", memoire->registres[rs1]);
-        printf("Case lue : %ld \n", (memoire->registres[rs1]/8 + imm));
+        printf("valeur de rs1 : %ld\n", memoire->registres[rs1]);
+        printf("Case lue : %ld \n", (memoire->registres[rs1] / 8 + imm));
 
-        printf("Valeur lue : %ld \n", memoire->memoire[memoire->registres[rs1]/8 + imm]);
+        printf("Valeur lue : %ld \n", memoire->memoire[memoire->registres[rs1] / 8 + imm]);
 
-        memoire->registres[rd] = memoire->memoire[memoire->registres[rs1]/8 + imm];
+        memoire->registres[rd] = memoire->memoire[memoire->registres[rs1] / 8 + imm];
         break;
     }
 
@@ -145,8 +145,8 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
 
         printf("immediat : %ld\n", imm);
         printf("rs1 : %d \n", rs1);
-        printf("Case modifiée : %ld \n", (memoire->registres[rs1]/8 + imm));
-        memoire->memoire[memoire->registres[rs1]/8 + imm] = memoire->registres[rs2];
+        printf("Case modifiée : %ld \n", (memoire->registres[rs1] / 8 + imm));
+        memoire->memoire[memoire->registres[rs1] / 8 + imm] = memoire->registres[rs2];
         break;
     }
 
@@ -165,42 +165,45 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         }
         printf("imm : %lx \n", imm);
 
+        int64_t rs1_value = (int64_t)(memoire->registres[rs1]);
+        int64_t rs2_value = (int64_t)(memoire->registres[rs2]);
+
         // beq
-        if ((funct3 == 0x0) && (memoire->registres[rs1] == memoire->registres[rs2])) {
+        if ((funct3 == 0x0) && (rs1_value == rs2_value)) {
             printf("beq ok\n");
-            printf("rs1 : %ld \n", rs1);
+            printf("rs1 : %d \n", rs1);
             printf("valeur rs1 : %ld \n", memoire->registres[rs1]);
-            printf("rs2 : %ld \n", rs2);
+            printf("rs2 : %d \n", rs2);
             printf("valeur rs2 : %ld \n", memoire->registres[rs2]);
             memoire->pc += imm;
             skip_pc = 1;
         }
         // bne
-        if (funct3 == 0x1 && memoire->registres[rs1] != memoire->registres[rs2]) {
+        if (funct3 == 0x1 && rs1_value != rs2_value) {
             printf("bne ok\n");
-            printf("rs1 : %ld \n", rs1);
+            printf("rs1 : %d \n", rs1);
             printf("valeur rs1 : %ld \n", memoire->registres[rs1]);
-            printf("rs2 : %ld \n", rs2);
+            printf("rs2 : %d \n", rs2);
             printf("valeur rs2 : %ld \n", memoire->registres[rs2]);
             memoire->pc += imm;
             skip_pc = 1;
         }
         // blt
-        if (funct3 == 0x4 && memoire->registres[rs1] < memoire->registres[rs2]) {
+        if (funct3 == 0x4 && rs1_value < rs2_value) {
             printf("blt ok\n");
-            printf("rs1 : %ld \n", rs1);
+            printf("rs1 : %d \n", rs1);
             printf("valeur rs1 : %ld \n", memoire->registres[rs1]);
-            printf("rs2 : %ld \n", rs2);
+            printf("rs2 : %d \n", rs2);
             printf("valeur rs2 : %ld \n", memoire->registres[rs2]);
             memoire->pc += imm;
             skip_pc = 1;
         }
         // bge
-        if (funct3 == 0x5 && memoire->registres[rs1] >= memoire->registres[rs2]) {
+        if (funct3 == 0x5 && rs1_value >= rs2_value) {
             printf("bge ok\n");
-            printf("rs1 : %ld \n", rs1);
+            printf("rs1 : %d \n", rs1);
             printf("valeur rs1 : %ld \n", memoire->registres[rs1]);
-            printf("rs2 : %ld \n", rs2);
+            printf("rs2 : %d \n", rs2);
             printf("valeur rs2 : %ld \n", memoire->registres[rs2]);
             memoire->pc += imm;
             skip_pc = 1;
@@ -217,7 +220,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
 
         uint64_t new_imm = (imm & 0b10000000000000000000) << 1 | (imm & 0b01111111111000000000) >> 8 | (imm & 0b00000000000100000000) << 3 | (imm & 0b00000000000011111111) << 12;
 
-        if ((new_imm >> 20) == 1) {                     // dans le cas d'ne valeur néagtve
+        if ((new_imm >> 20) == 1) {                     // dans le cas d'une valeur néagtve
             new_imm = new_imm | 0xffffffffffe00000;
         }
 
