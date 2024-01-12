@@ -15,7 +15,6 @@ add a0, a0, s0
 addi t1, t1, 1
 j -12
 
-
 # EXPECTED
 # s0: 2
 # t1: 10
