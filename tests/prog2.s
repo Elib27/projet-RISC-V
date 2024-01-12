@@ -1,3 +1,4 @@
+# test fonction add, addi, beq et j
 
 addi s0, zero, 2
 

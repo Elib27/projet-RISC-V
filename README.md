@@ -68,7 +68,7 @@ Pour lire le fichier `.hex`, nous allons utilliser l'instruction `fscanf()` avec
 
 * Décrivez comment vous allez répartir les tâches de l'émulateur en différents fichiers, ou ne pas les répartir et tout faire dans le même fichier. Expliquez les avantages de votre choix.
 
-[COMPLÉTER ICI]
+Bien que le programme soit court, on choisit de répartir les tâches de l'émulateur dans différents fichiers pour une meilleure structure et clarté du programme. [A COMPLETER]
 
 Questions à remplir _après_ avoir programmé l'émulateur :
 
@@ -79,12 +79,12 @@ Questions à remplir _après_ avoir programmé l'émulateur :
 * Avez-vous compris le fonctionnement de chaque instruction à partir de la
 documentation fournie ? Si non, quels sont les points obscurs ?
 
-[COMPLÉTER ICI]
+Oui, la documentation était assez claire et la première partie sur l'assembleur nous a déjà permis de bien comprendre le fonctionnement de chaque instruction.
 
 * Quels exemples de programmes avez-vous choisi pour tester le calcul ? Les
 comparaisons et sauts ? La mémoire ?
 
-[COMPLÉTER ICI]
+Nous avons choisi de tester le calcul avec des additions, des soustractions, avec des valeurs immédiates et des registres. Nous avons testé les comparaisons avec des instructions de comparaisons et des sauts. Nous avons testé la mémoire avec des instructions de chargement et de stockage. On n'oublie pas de tester les pseudo-instructions.
 
 * Reste-t-il des bugs que vous avez découverts et pas corrigés ?
 
@@ -105,4 +105,5 @@ comparaisons et sauts ? La mémoire ?
 
 * Des retours sur le projet en général ?
 
-[COMPLÉTER ICI]
+Ce projet nous a permis de mieux comprendre le fonctionnement d'un processeur, spécifiquement l'encodage, le décodage et l'exécution de l'assembleur (ici RISC-V). Nous avons pu voir comment un processeur gère la mémoire et les registres.
+Ce fut un projet très intéressant mais peut-être un peu petit pour y travailler en binôme.
