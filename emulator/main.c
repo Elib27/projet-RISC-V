@@ -160,7 +160,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t imm2 = (instruction >> 7) & 0b11111;
         uint64_t imm = ((imm1 >> 7) << 12) | (imm2 & 1) << 11 | (imm1 && 0b111111) << 5 | (imm2 >> 1) << 1;
 
-        if ((imm >> 11) == 1) {                   // dans le cas d'une valeur négative
+        if ((imm >> 12) == 1) {                   // dans le cas d'une valeur négative
             imm = imm | 0xffffffffffffe000;
         }
         printf("imm : %lx \n", imm);
