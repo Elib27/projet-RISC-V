@@ -68,7 +68,7 @@ Pour lire le fichier `.hex`, nous allons utilliser l'instruction `fscanf()` avec
 
 * Décrivez comment vous allez répartir les tâches de l'émulateur en différents fichiers, ou ne pas les répartir et tout faire dans le même fichier. Expliquez les avantages de votre choix.
 
-Bien que le programme soit court, on choisit de répartir les tâches de l'émulateur dans différents fichiers pour une meilleure structure et clarté du programme. [A COMPLETER]
+Comme le programme est court, on choisit de laisser les différentes tâches de l'émulateur dans un seul et même fichier une meilleure structure et clarté du programme.
 
 Questions à remplir _après_ avoir programmé l'émulateur :
 
