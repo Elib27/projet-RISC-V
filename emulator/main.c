@@ -160,8 +160,8 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t imm2 = (instruction >> 7) & 0b11111;
         uint64_t u_imm = ((imm1 >> 7) << 12) | (imm2 & 1) << 11 | (imm1 & 0b111111) << 5 | (imm2 >> 1) << 1;
 
-        if ((imm >> 12) == 1) {                   // dans le cas d'une valeur négative
-            imm = imm | 0xffffffffffffe000;
+        if ((u_imm >> 11) == 1) {                   // dans le cas d'une valeur négative
+            u_imm = u_imm | 0xfffffffffffff000;
         }
 
         int64_t imm = (int64_t)u_imm;
@@ -223,7 +223,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint64_t new_imm = (imm & 0b10000000000000000000) << 1 | (imm & 0b01111111111000000000) >> 8 | (imm & 0b00000000000100000000) << 3 | (imm & 0b00000000000011111111) << 12;
 
         if ((new_imm >> 20) == 1) {                     // dans le cas d'une valeur néagtve
-            new_imm = new_imm | 0xffffffffffe00000;
+            new_imm = new_imm | 0xfffffffffff00000;
         }
 
         memoire->registres[rd] = memoire->pc + 4;
