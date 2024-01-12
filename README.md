@@ -74,7 +74,7 @@ Questions à remplir _après_ avoir programmé l'émulateur :
 
 * Aviez-vous réussi à listé toutes les tâches dans la première question ? Rétrospectivement, y a-t-il des tâches dont vous aviez sous-estimé ou sur-estimé la complexité ?
 
-Dans la première question, noua
+Dans la première question, nous avons listé toutes les grandes étapes de l'émulation. Nous avons sous-estimer les problèmes des négatifs dans les immédiats. En effet, il faut pouvoir détecter la présence d'in immédiat négatif pour bien pouvoir l'étendre.
 
 * Avez-vous compris le fonctionnement de chaque instruction à partir de la
 documentation fournie ? Si non, quels sont les points obscurs ?
@@ -95,11 +95,11 @@ Nous avons corrigés tous les bugs que nous avons découverts.
 [COMPLÉTER ICI]
 
 * Cochez (en remplaçant `[ ]` par `[x]`) si vous avez :**
-  - [ ] Implémenté l'émulation de toutes les instructions gérées par le rendu 2.
-  - [ ] Implémenté l'émulation de toutes les instructions.
-  - [ ] Tous vos tests qui passent.
-  - [ ] Vérifié que vous tests couvrent toutes les instructions émulées.
-  - [ ] Testé les cas particuliers : valeurs négatives, overflows...
+  - [x] Implémenté l'émulation de toutes les instructions gérées par le rendu 2.
+  - [x] Implémenté l'émulation de toutes les instructions.
+  - [x] Tous vos tests qui passent.
+  - [x] Vérifié que vous tests couvrent toutes les instructions émulées.
+  - [x] Testé les cas particuliers : valeurs négatives, overflows...
   - [ ] Testé les cas d'erreur : division par zéro, sauts invalides... _(pas demandé par le sujet)_
   - [ ] Un port fonctionnel de DOOM pour votre émulateur.
 

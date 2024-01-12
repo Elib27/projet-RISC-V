@@ -220,7 +220,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint64_t new_imm = (imm & 0b10000000000000000000) << 1 | (imm & 0b01111111111000000000) >> 8 | (imm & 0b00000000000100000000) << 3 | (imm & 0b00000000000011111111) << 12;
 
         if ((new_imm >> 20) == 1) {                     // dans le cas d'une valeur néagtve
-            new_imm = new_imm | 0xffffffffffe00000;
+            new_imm = new_imm | 0xfffffffffff00000;
         }
 
         memoire->registres[rd] = memoire->pc + 4;
