@@ -88,7 +88,7 @@ Nous avons choisi de tester le calcul avec des additions, des soustractions, ave
 
 * Reste-t-il des bugs que vous avez découverts et pas corrigés ?
 
-[COMPLÉTER ICI]
+Nous avons corrigés tous les bugs que nous avons découverts.
 
 * D'autres remarques sur votre programme ?
 
