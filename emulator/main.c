@@ -135,7 +135,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         }
 
         printf("Case modifiée : %ld \n", (rs1 + imm));
-        memoire->memoire[rs1 + imm] = memoire->registres[rs2];
+        memoire->memoire[memoire->registres[rs1 / 8 + imm]] = memoire->registres[rs2];
         break;
     }
 
@@ -149,9 +149,10 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
         uint32_t imm2 = (instruction >> 7) & 0b11111;
         uint64_t imm = ((imm1 >> 7) << 12) | (imm2 & 1) << 11 | (imm1 && 0b111111) << 5 | (imm2 >> 1) << 1;
 
-        if ((imm >> 12) == 1) {                   // dans le cas d'une valeur négative
+        if ((imm >> 11) == 1) {                   // dans le cas d'une valeur négative
             imm = imm | 0xffffffffffffe000;
         }
+        printf("imm : %lx \n", imm);
 
         // beq
         if ((funct3 == 0x0) && (memoire->registres[rs1] == memoire->registres[rs2])) {
@@ -204,7 +205,7 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
 
     default:
     {
-        printf("Erreur: Instruction non reconnue.");
+        printf("Erreur: Instruction non reconnue.\n");
         break;
     }
     }
@@ -274,7 +275,7 @@ int main(int argc, char **argv) {
         }
         memoire.registres[0] = 0;
         instruction = lectureInstruction(&memoire);
-        printf("instruction suivante : %lx \n", instruction);
+        printf("instruction suivante : %x \n", instruction);
         printmem(&memoire, 5);
     }
 
