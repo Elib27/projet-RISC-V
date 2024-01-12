@@ -153,17 +153,19 @@ int executeInstruction(uint32_t instruction, Memoire *memoire) {
     case BEQ_BNE_BLT_BGE:
     {
         printf("------------BEQ_BNE_BLT_BGE----------\n");
-        uint32_t imm1 = instruction >> 25;
+        uint32_t imm1 = instruction >> 25 & 0b1111111;
         uint32_t rs2 = (instruction >> 20) & 0b11111;
         uint32_t rs1 = (instruction >> 15) & 0b11111;
         uint32_t funct3 = (instruction >> 12) & 0b111;
         uint32_t imm2 = (instruction >> 7) & 0b11111;
-        uint64_t imm = ((imm1 >> 7) << 12) | (imm2 & 1) << 11 | (imm1 && 0b111111) << 5 | (imm2 >> 1) << 1;
+        uint64_t u_imm = ((imm1 >> 7) << 12) | (imm2 & 1) << 11 | (imm1 & 0b111111) << 5 | (imm2 >> 1) << 1;
 
         if ((imm >> 12) == 1) {                   // dans le cas d'une valeur négative
             imm = imm | 0xffffffffffffe000;
         }
-        printf("imm : %lx \n", imm);
+
+        int64_t imm = (int64_t)u_imm;
+        printf("imm : %ld \n", imm);
 
         int64_t rs1_value = (int64_t)(memoire->registres[rs1]);
         int64_t rs2_value = (int64_t)(memoire->registres[rs2]);

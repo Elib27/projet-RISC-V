@@ -12,10 +12,6 @@ j -16
 #addi s0, zero, 1
 
 
-
-
-
-
 # EXPECTED
 # sp : 16304
 # a0 : 10
