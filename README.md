@@ -60,7 +60,7 @@ Questions à remplir _avant_ de programmer l'émulateur (10 lignes sont conseill
     - Lire les bonnes valeurs dans la mémoire si besoin
     - Executer les changements sur les registres
     - Appliquer les changements sur la mémoire
-  
+
 
 * Quelle fonction de la bibliothèque standard pouvez-vous utiliser pour lire les valeurs listées dans le fichier `.hex` sans vous casser la tête ? (Indice : ces valeurs ont été écrites avec `fprintf()`.)
 
@@ -68,13 +68,13 @@ Pour lire le fichier `.hex`, nous allons utilliser l'instruction `fscanf()` avec
 
 * Décrivez comment vous allez répartir les tâches de l'émulateur en différents fichiers, ou ne pas les répartir et tout faire dans le même fichier. Expliquez les avantages de votre choix.
 
-Comme le programme est court, on choisit de laisser les différentes tâches de l'émulateur dans un seul et même fichier une meilleure structure et clarté du programme.
+Comme le programme est court, on choisit de laisser les différentes tâches de l'émulateur dans un seul et même fichier pour une meilleure structure et clarté du programme.
 
 Questions à remplir _après_ avoir programmé l'émulateur :
 
 * Aviez-vous réussi à listé toutes les tâches dans la première question ? Rétrospectivement, y a-t-il des tâches dont vous aviez sous-estimé ou sur-estimé la complexité ?
 
-Dans la première question, nous avons listé toutes les grandes étapes de l'émulation. Nous avons sous-estimer les problèmes des négatifs dans les immédiats. En effet, il faut pouvoir détecter la présence d'in immédiat négatif pour bien pouvoir l'étendre.
+Dans la première question, nous avons listé toutes les grandes étapes de l'émulation. Nous avons sous-estimé les problèmes des négatifs dans les immédiats. En effet, il faut pouvoir détecter la présence d'un immédiat négatif pour bien pouvoir faire l'extension du signe.
 
 * Avez-vous compris le fonctionnement de chaque instruction à partir de la
 documentation fournie ? Si non, quels sont les points obscurs ?
