@@ -1,4 +1,4 @@
-# Test de bge
+# test de bge
 
 addi a0, zero, 5
 addi a1, zero, 3

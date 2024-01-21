@@ -1,4 +1,4 @@
-# Test jal
+# test jal
 
 addi x1, zero, 100
 addi x2, zero, 200
