@@ -1,5 +1,6 @@
 /tests/*.hex
 /tests/*.o
+/tests/*.state
 /tests/*.bin
 riscv-assembler
 riscv-emulator
